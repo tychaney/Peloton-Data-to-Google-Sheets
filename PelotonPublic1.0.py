@@ -198,7 +198,7 @@ def simplify_df_all_data (cycling_only):
     
     data_by_month = workout_data_we_want_copy.groupby(pd.Grouper(freq='M')).sum()
 
-    data_by_month.index = data_by_month.index.strftime('%m/%y')
+    data_by_month.index = data_by_month.index.strftime('%Y/%m')
 
     average_df_copy = average_df
     
@@ -206,7 +206,7 @@ def simplify_df_all_data (cycling_only):
 
     data_by_month_avg = average_df_copy.groupby(pd.Grouper(freq='M')).mean()
 
-    data_by_month_avg.index = data_by_month_avg.index.strftime('%m/%y')
+    data_by_month_avg.index = data_by_month_avg.index.strftime('%Y/%m')
 
     moaDF_by_month = data_by_month.join(data_by_month_avg)
 
