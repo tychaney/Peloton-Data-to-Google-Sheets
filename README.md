@@ -17,3 +17,5 @@ a daily wrap email.
 
 The script utilizes several dependencies (noted in the code itself). One of the dependencies is based on the 
 google sheets API. Information can be found here: https://developers.google.com/sheets/api
+
+Feel free to reach out with any questions you have or buy me a coffee :) Venmo: @TylerChaney
