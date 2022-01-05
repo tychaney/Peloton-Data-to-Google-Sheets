@@ -6,7 +6,8 @@ Solution: this script. I personally run this at set intervals on a raspberry pi,
 is usable at virtually all hours.
 
 Here's how it works. The code relies on first having built a csv file which contains the headings of 'name',
-'username', 'email', and 'password' (for Peloton). The script pulls data from this file and then logs into
+'username', 'email', and 'password' (for Peloton). It also includes other unique path and link variables to
+simplify execution for inexperienced users. The script pulls data from this file and then logs into
 peloton. From there, it downloads the users CSV data with all of their workout data. For my specific needs,
 we only cared about cycling data (which you will notice in the code). Several calculations are performed and
 some clean up is completed on the dataframes. That data is then passed into the user's assigned Google Sheet
