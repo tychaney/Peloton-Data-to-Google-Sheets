@@ -5,6 +5,9 @@ Problem: 2 peloton users were looking for a way to track their metrics in a way 
 Solution: this script. I personally run this at set intervals on a raspberry pi, so access to their data 
 is usable at virtually all hours.
 
+Example Google Sheet (use this for formatting)
+https://docs.google.com/spreadsheets/d/1ZfYI-NGeTK08VAQsnpXk_e_z_mnyT_7vX98O82nLxPY/edit?usp=sharing
+
 Here's how it works. The code relies on first having built a csv file which contains the headings of 'name',
 'username', 'email', and 'password' (for Peloton). It also includes other unique path and link variables to
 simplify execution for inexperienced users. The script pulls data from this file and then logs into
