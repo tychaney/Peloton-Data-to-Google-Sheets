@@ -1,5 +1,6 @@
 from gspread.auth import service_account
 import pandas as pd
+pd.options.mode.chained_assignment = None  # default='warn'
 import plotly.express as px
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
