@@ -1,4 +1,4 @@
-# Version 1.0.0 Current As Of 08JAN22
+# Version 1.0.1 Current As Of 09JAN22
 import os
 import pandas as pd
 pd.options.mode.chained_assignment = None  # default='warn' (credit to JHJCo for catching this)
@@ -311,8 +311,8 @@ def make_sns_plots (username, moaDF_all_time):
     sns.set_style("darkgrid")
     sns.kdeplot(avg_hr_all_time, shade=True)
     # plt.legend()
-    plt.title(username + ' Average HR per Ride KDE All Time')
-    plt.savefig(graph_path + username + '/' + username +  '_Average_HR_KDE.jpg')
+    plt.title(f'{username} Average HR per Ride KDE All Time')
+    plt.savefig(f'{graph_path}{username}/{username}_Average_HR_KDE.jpg')
     plt.clf()
     # Remove all 0s
     moaDF_all_time[moaDF_all_time <= 0] = np.nan
@@ -320,9 +320,9 @@ def make_sns_plots (username, moaDF_all_time):
     plt.figure(figsize = (15,8))
     sns.set_style("darkgrid")
     ax = sns.violinplot(data = moaDF_all_time, x=moaDF_all_time.index.year, y= 'Avg. Heartrate')
-    plt.title(username + ' Average Heartrate per Ride (by Year)')
+    plt.title(f'{username} Average Heartrate per Ride (by Year)')
     ax.set_xticklabels(ax.get_xticklabels(),rotation = 30)
-    plt.savefig(graph_path + username +  '/' + username + '_Average_HR_by_year.jpg')
+    plt.savefig(f'{graph_path}{username}/{username}_Average_HR_by_year.jpg')
     plt.clf()
 
     # Make a boxplot by month
@@ -330,9 +330,9 @@ def make_sns_plots (username, moaDF_all_time):
     plt.figure(figsize=(15,8))
     sns.set_style("darkgrid")
     ax = sns.boxplot(data = moaDF_all_time, x=moaDF_all_time.index.to_period('M'), y= 'Avg. Heartrate')
-    plt.title(username + ' Average Heartrate per Ride (by Year)')
+    plt.title(f'{username} Average Heartrate per Ride (by Year)')
     ax.set_xticklabels(ax.get_xticklabels(),rotation = 30)
-    plt.savefig(graph_path + username + '/' + username +  '_Average_HR_by_month.jpg')
+    plt.savefig(f'{graph_path}{username}/{username}_Average_HR_by_month.jpg')    
     plt.clf()
 
     # Make a Violin Chart off of HR
@@ -340,8 +340,8 @@ def make_sns_plots (username, moaDF_all_time):
     sns.set_style("darkgrid")
     ax = sns.violinplot(data = moaDF_all_time, x=moaDF_all_time.index.to_period('M'), y= 'Avg. Heartrate')
     ax.set_xticklabels(ax.get_xticklabels(),rotation = 30)
-    plt.title(username + ' Average Heartrate per Ride (by Month)')
-    plt.savefig(graph_path + username + '/' + username + '_Violin_Average_HR_by_month.jpg')
+    plt.title(f'{username} Average Heartrate per Ride (by Month)')
+    plt.savefig(f'{graph_path}{username}/{username}_Violin_Average_HR_by_month.jpg')    
     plt.clf()
 
     # Output
@@ -349,27 +349,27 @@ def make_sns_plots (username, moaDF_all_time):
     plt.figure(figsize=(15,8))
     sns.set_style("darkgrid")
     ax = sns.violinplot(data = moaDF_all_time, x=moaDF_all_time.index.year, y= 'Total Output')
-    plt.title(username + ' Total Output per Ride (by Year)')
+    plt.title(f'{username} Total Output per Ride (by Year)')
     ax.set_xticklabels(ax.get_xticklabels(),rotation = 30)
-    plt.savefig(graph_path + username +  '/' + username + '_Total_Output_by_year.jpg')
+    plt.savefig(f'{graph_path}{username}/{username}_Total_Output_by_year.jpg')    
     plt.clf()
 
     # Violin By Month
     plt.figure(figsize=(15,8))
     sns.set_style('darkgrid')
     ax = sns.violinplot(data = moaDF_all_time, x=moaDF_all_time.index.to_period('M'), y= 'Total Output')
-    plt.title(username + ' Total Output per Ride (by Month)')
+    plt.title(f'{username} Total Output per Ride (by Month)')
     ax.set_xticklabels(ax.get_xticklabels(),rotation = 30)
-    plt.savefig(graph_path + username +  '/' + username + '_Violin_Total Output_by_month.jpg')
+    plt.savefig(f'{graph_path}{username}/{username}_Violin_Total Output_by_month.jpg')      
     plt.clf()
 
     # Boxplot per Month
     plt.figure(figsize=(15,8))
     sns.set_style('darkgrid')
     ax = sns.boxplot(data = moaDF_all_time, x=moaDF_all_time.index.to_period('M'), y= 'Total Output')
-    plt.title(username + ' Total Output per Ride (by Month)')
+    plt.title(f'{username} Total Output per Ride (by Month)')
     ax.set_xticklabels(ax.get_xticklabels(),rotation = 30)
-    plt.savefig(graph_path + username + '/' + username + '_Boxplot_Total Output_by_month.jpg')
+    plt.savefig(f'{graph_path}{username}/{username}_Boxplot_Total Output_by_month.jpg')     
     plt.clf()
 
 make_sns_plots(username_user_1, moaDF_user_1)
