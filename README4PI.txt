@@ -1,6 +1,7 @@
-## Below are package installations necessary on a Raspberry Pi 4
+# Below are package installations necessary on a Raspberry Pi 4
 ## Raspbian comes with Python3 pre-installed, so no need to install it manually
 
+```bash
 sudo apt-get update
 sudo apt-get install python3-pip
 sudo apt-get install libatlas-base-dev
@@ -16,3 +17,4 @@ pip3 install oauth2client
 pip3 install gspread_dataframe
 pip3 install numpy
 pip3 install kaleido
+```
