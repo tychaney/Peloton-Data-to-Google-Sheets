@@ -26,6 +26,8 @@ Feel free to reach out with any questions you have or buy me a coffee :) Venmo: 
 # General Setup
 The following dependencies are required to run this script properly
 
+```bash
+
 pip install pandas
 pip install seaborn
 pip install matplotlib
@@ -35,6 +37,9 @@ pip install plotly.express
 pip install oauth2client
 pip install gspread_dataframe
 pip install numpy
+
+```
+
 
 # The CSV file used for importing data can be found here:
 [LoginData.csv](https://github.com/tychaney/Peloton-Data-to-Google-Sheets/files/7835659/LoginData.csv)
