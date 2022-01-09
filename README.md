@@ -47,5 +47,11 @@ pip install numpy
 # For formatting of your Google Sheet:
 https://docs.google.com/spreadsheets/d/1ZfYI-NGeTK08VAQsnpXk_e_z_mnyT_7vX98O82nLxPY/edit#gid=1196700570
 
+# To Run the Script (Ensure the Login.CSV is stored in the same directory)[Note: if you already have python set as the alias, no need for 'python3']
 
+```bash
+
+python3 PelotonToSheets.py
+
+```
 
