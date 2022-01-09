@@ -22,3 +22,25 @@ The script utilizes several dependencies (noted in the code itself). One of the 
 google sheets API. Information can be found here: https://developers.google.com/sheets/api
 
 Feel free to reach out with any questions you have or buy me a coffee :) Venmo: @TylerChaney
+
+# General Setup
+The following dependencies are required to run this script properly
+
+pip install pandas
+pip install seaborn
+pip install matplotlib
+pip install gspread
+pip install plotly
+pip install plotly.express
+pip install oauth2client
+pip install gspread_dataframe
+pip install numpy
+
+# The CSV file used for importing data can be found here:
+[LoginData.csv](https://github.com/tychaney/Peloton-Data-to-Google-Sheets/files/7835659/LoginData.csv)
+
+# For formatting of your Google Sheet:
+https://docs.google.com/spreadsheets/d/1ZfYI-NGeTK08VAQsnpXk_e_z_mnyT_7vX98O82nLxPY/edit#gid=1196700570
+
+
+
