@@ -1,4 +1,5 @@
 # Version 1.0.0 Current As Of 08JAN22
+import os
 import pandas as pd
 pd.options.mode.chained_assignment = None  # default='warn' (credit to JHJCo for catching this)
 import plotly.express as px
@@ -9,6 +10,7 @@ import requests
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.image import MIMEImage
 import numpy as np
 from gspread_dataframe import set_with_dataframe
 from matplotlib import pyplot as plt
@@ -310,7 +312,7 @@ def make_sns_plots (username, moaDF_all_time):
     sns.kdeplot(avg_hr_all_time, shade=True)
     # plt.legend()
     plt.title(username + ' Average HR per Ride KDE All Time')
-    plt.savefig(graph_path + username + '/' + username +  '_Average_HR_KDE.jpeg')
+    plt.savefig(graph_path + username + '/' + username +  '_Average_HR_KDE.jpg')
     plt.clf()
     # Remove all 0s
     moaDF_all_time[moaDF_all_time <= 0] = np.nan
@@ -320,7 +322,7 @@ def make_sns_plots (username, moaDF_all_time):
     ax = sns.violinplot(data = moaDF_all_time, x=moaDF_all_time.index.year, y= 'Avg. Heartrate')
     plt.title(username + ' Average Heartrate per Ride (by Year)')
     ax.set_xticklabels(ax.get_xticklabels(),rotation = 30)
-    plt.savefig(graph_path + username +  '/' + username + '_Average_HR_by_year.jpeg')
+    plt.savefig(graph_path + username +  '/' + username + '_Average_HR_by_year.jpg')
     plt.clf()
 
     # Make a boxplot by month
@@ -330,7 +332,7 @@ def make_sns_plots (username, moaDF_all_time):
     ax = sns.boxplot(data = moaDF_all_time, x=moaDF_all_time.index.to_period('M'), y= 'Avg. Heartrate')
     plt.title(username + ' Average Heartrate per Ride (by Year)')
     ax.set_xticklabels(ax.get_xticklabels(),rotation = 30)
-    plt.savefig(graph_path + username + '/' + username +  '_Average_HR_by_month.jpeg')
+    plt.savefig(graph_path + username + '/' + username +  '_Average_HR_by_month.jpg')
     plt.clf()
 
     # Make a Violin Chart off of HR
@@ -380,7 +382,7 @@ def make_charts(requested_workout_data,username):
     figOutput_Distance.update_layout(autosize = True, width = 1200, height = 900, font_size = 22)
     figOutput_Distance.update_traces(marker=dict(size=12,line=dict(width=3, color='DarkSlateGrey')),
                   selector=dict(mode='markers'))
-    figOutput_Distance.write_image(graph_path + username + '/' + username +  '_Output_to_Distance2D.jpeg')           
+    figOutput_Distance.write_image(graph_path + username + '/' + username +  '_Output_to_Distance2D.jpg')           
 
 make_charts(current_year_requested_user_1, username_user_1)
 # make_charts(current_year_requested_user_2, username_user_2)
@@ -552,9 +554,17 @@ gmail_user = 'gmailaccount@gmail.com'
 gmail_password = 'password'
 
 # Send Text Update
-def send_text_update(phone_number, summary_df, sheets_link):
+def send_text_update(phone_number, summary_df, sheets_link, username):
     time_now = datetime.now()    
-        
+
+    def find_by_postfix(postfix, folder):
+        for root, _, files in os.walk(folder):
+            for file in files:
+                if file.endswith(postfix):
+                    yield os.path.join(root, file)
+
+    user_graphs = find_by_postfix('.jpg', graph_path + username + '/')
+    
     if time_now.hour < 16:
         pass
     
@@ -596,6 +606,13 @@ def send_text_update(phone_number, summary_df, sheets_link):
         # and then attach that body furthermore you can also send html content.
         msg.attach(MIMEText(body, 'plain'))
 
+        for image in user_graphs:
+            with open(image, 'rb') as fp:
+                img = MIMEImage(fp.read(),_subtype='jpg')
+        
+        msg.attach(img)
+        
+
         sms = msg.as_string()
 
         server.sendmail(gmail_user,sms_gateway,sms)
@@ -603,9 +620,9 @@ def send_text_update(phone_number, summary_df, sheets_link):
         # lastly quit the server
         server.quit()
 
-send_text_update(phone_user_1,summary_df_user_1,google_sheets_link_user_1)
-# send_text_update(phone_user_2,summary_df_user_2,google_sheets_link_user_2)
-# send_text_update(phone_user_3,summary_df_user_3,google_sheets_link_user_3)
+send_text_update(phone_user_1,summary_df_user_1,google_sheets_link_user_1,username_user_1)
+# send_text_update(phone_user_2,summary_df_user_2,google_sheets_link_user_2, username_user_2)
+# send_text_update(phone_user_3,summary_df_user_3,google_sheets_link_user_3, username_user_3)
 
 # Create the email function
 def send_email_update (email, username, summary_df,sheets_link):
