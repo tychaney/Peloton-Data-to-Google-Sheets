@@ -1,3 +1,4 @@
+# Version 1.0.0 Current As Of 08JAN22
 import pandas as pd
 pd.options.mode.chained_assignment = None  # default='warn' (credit to JHJCo for catching this)
 import plotly.express as px
@@ -6,6 +7,8 @@ from oauth2client.service_account import ServiceAccountCredentials
 from datetime import date, datetime
 import requests
 import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 import numpy as np
 from gspread_dataframe import set_with_dataframe
 from matplotlib import pyplot as plt
@@ -28,18 +31,21 @@ password_user_1 = login_df.iloc[0]['password']
 username_user_1 = login_df.iloc[0]['username']
 peloton_csv_link_user_1 = login_df.iloc[0]['Peloton CSV Link']
 google_sheets_link_user_1 = login_df.iloc[0]['Google Sheets Link']
+phone_user_1 = login_df.iloc[0]['phone']
 # # user_2
 # email_user_2 = login_df.iloc[1]['email']
 # password_user_2 = login_df.iloc[1]['password']
 # username_user_2 = login_df.iloc[1]['username']
 # peloton_csv_link_user_2 = login_df.iloc[1]['Peloton CSV Link']
 # google_sheets_link_user_2 = login_df.iloc[1]['Google Sheets Link']
+#phone_user_2 = login_df.iloc[1]['phone']
 # # user_3
 # email_user_3 = login_df.iloc[2]['email']
 # password_user_3 = login_df.iloc[2]['password']
 # username_user_3 = login_df.iloc[2]['username']
 # peloton_csv_link_user_3 = login_df.iloc[2]['Peloton CSV Link']
 # google_sheets_link_user_3 = login_df.iloc[2]['Google Sheets Link']
+#phone_user_3 = login_df.iloc[2]['phone']
 
 # Same for Each
 service_account_path = login_df.iloc[0]['Path for Service Account JSON'] #Same for all users
@@ -541,9 +547,65 @@ set_with_dataframe(ws_user_15, moaDF_user_1, row, col,include_index=True)
 # # All Time All Data (moaDF)
 # set_with_dataframe(ws_user_35, moaDF_user_3, row, col,include_index=True)
 
-# This is the email we send from if you want to use the email update function (currently commented out)
+# This is the email we send from if you want to use the email or text update function (currently commented out)
 gmail_user = 'gmailaccount@gmail.com'
 gmail_password = 'password'
+
+# Send Text Update
+def send_text_update(phone_number, summary_df, sheets_link):
+    time_now = datetime.now()    
+        
+    if time_now.hour < 16:
+        pass
+    
+    else:
+        current_pace = summary_df.iloc[8]['Value']
+        total_distance = summary_df.iloc[3]['Value']
+        most_recent_workout = summary_df.iloc[1]['Value']
+        sms_gateway = str(phone_number)+'@tmomail.net' #in order to send SMS, need to know carrier 
+                                                        # AT&T: [number]@txt.att.net
+                                                        # Sprint: [number]@messaging.sprintpcs.com or [number]@pm .sprint.com
+                                                        # T-Mobile: [number]@tmomail.net
+                                                        # Verizon: [number]@vtext.com
+                                                        # Boost Mobile: [number]@myboostmobile.com
+                                                        # Cricket: [number]@sms.mycricket.com
+                                                        # Metro PCS: [number]@mymetropcs.com
+                                                        # Tracfone: [number]@mmst5.tracfone.com
+                                                        # U.S. Cellular: [number]@email.uscc.net
+                                                        # Virgin Mobile: [number]@vmobl.com
+        # The server we use to send emails in our case it will be gmail but every email provider has a different smtp 
+        # and port is also provided by the email provider.
+        smtp = "smtp.gmail.com" 
+        port = 587
+        # This will start our email server
+        server = smtplib.SMTP(smtp,port)
+        # Starting the server
+        server.starttls()
+        # Now we need to login
+        server.login(gmail_user,gmail_password)
+
+        # Now we use the MIME module to structure our message.
+        msg = MIMEMultipart()
+        msg['From'] = gmail_user
+        msg['To'] = sms_gateway
+        # Make sure you add a new line in the subject
+        msg['Subject'] = "Daily Wrap\n"
+        # Make sure you also add new lines to your body
+        body = '\Your workout tracker has been updated on your peloton output file via automatic scripting. So far this year, you have ridden ' + str(total_distance) + \
+                ' miles. Your most recent ride was on ' + str(most_recent_workout) + '. You are currently on pace for ' + str(current_pace) + ' miles this year. You can access the file here: ' + str(sheets_link)
+        # and then attach that body furthermore you can also send html content.
+        msg.attach(MIMEText(body, 'plain'))
+
+        sms = msg.as_string()
+
+        server.sendmail(gmail_user,sms_gateway,sms)
+
+        # lastly quit the server
+        server.quit()
+
+send_text_update(phone_user_1,summary_df_user_1,google_sheets_link_user_1)
+# send_text_update(phone_user_2,summary_df_user_2,google_sheets_link_user_2)
+# send_text_update(phone_user_3,summary_df_user_3,google_sheets_link_user_3)
 
 # Create the email function
 def send_email_update (email, username, summary_df,sheets_link):
