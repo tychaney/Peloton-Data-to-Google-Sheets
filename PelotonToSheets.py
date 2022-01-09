@@ -609,6 +609,7 @@ def send_text_update(phone_number, summary_df, sheets_link, username):
         for image in user_graphs:
             with open(image, 'rb') as fp:
                 img = MIMEImage(fp.read(),_subtype='jpg')
+                img.add_header('Content-Disposition', 'attachment', filename= image)
         
         msg.attach(img)
         
