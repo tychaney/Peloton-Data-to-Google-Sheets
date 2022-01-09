@@ -496,8 +496,9 @@ def send_text_update(phone_number, summary_df, sheets_link, username):
         # Make sure you add a new line in the subject
         msg['Subject'] = "Daily Wrap\n"
         # Make sure you also add new lines to your body
-        body = '\Your workout tracker has been updated on your peloton output file via automatic scripting. So far this year, you have ridden ' + str(total_distance) + \
-                ' miles. Your most recent ride was on ' + str(most_recent_workout) + '. You are currently on pace for ' + str(current_pace) + ' miles this year. You can access the file here: ' + str(sheets_link)
+        body = f'Your workout tracker has been updated on your peloton output file via automatic scripting. So far this year, you have ridden {total_distance} \
+                 miles. Your most recent ride was on  {most_recent_workout}. You are currently on pace for {current_pace} miles this year. You can access the file       here: \
+                {sheets_link}\nYour Graphs can be found below:'
         # and then attach that body furthermore you can also send html content.
         msg.attach(MIMEText(body, 'plain'))
 
