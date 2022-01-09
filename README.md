@@ -56,7 +56,7 @@ https://docs.google.com/spreadsheets/d/1ZfYI-NGeTK08VAQsnpXk_e_z_mnyT_7vX98O82nL
 python3 PelotonToSheets.py
 
 ```
-#In-Depth Look at the Script
+# In-Depth Look at the Script
 
 The first part of the script takes the data provided in the Login.csv file and applies each value to user-specific variables. Please note, for more than 1 user, the paths for graphs and the Google Sheets API JSON will be the same for all users
 
