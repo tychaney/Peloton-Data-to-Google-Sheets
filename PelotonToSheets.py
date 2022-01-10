@@ -572,7 +572,7 @@ def send_text_update(phone_number, summary_df, sheets_link, username):
         current_pace = summary_df.iloc[8]['Value']
         total_distance = summary_df.iloc[3]['Value']
         most_recent_workout = summary_df.iloc[1]['Value']
-        sms_gateway = str(phone_number)+'@tmomail.net' #in order to send SMS, need to know carrier 
+        sms_gateway = f'{phone_number}@tmomail.net' #in order to send SMS, need to know carrier 
                                                         # AT&T: [number]@txt.att.net
                                                         # Sprint: [number]@messaging.sprintpcs.com or [number]@pm .sprint.com
                                                         # T-Mobile: [number]@tmomail.net
@@ -628,53 +628,59 @@ send_text_update(phone_user_1,summary_df_user_1,google_sheets_link_user_1,userna
 # Create the email function
 def send_email_update (email, username, summary_df,sheets_link):
     time_now = datetime.now()    
+    time_now = datetime.now()    
+
+    def find_by_postfix(postfix, folder):
+        for root, _, files in os.walk(folder):
+            for file in files:
+                if file.endswith(postfix):
+                    yield os.path.join(root, file)
+
+    user_graphs = find_by_postfix('.jpg', graph_path + username + '/')
+    
     if time_now.hour < 16:
         pass
+    
     else:
-       
         current_pace = summary_df.iloc[8]['Value']
-       
         total_distance = summary_df.iloc[3]['Value']
-       
         most_recent_workout = summary_df.iloc[1]['Value']
-       
-        sent_from = gmail_user
-       
-        to = str(email)
-       
-        subject = 'Daily Wrap for ' + username
-       
+        sms_gateway = email
+        smtp = "smtp.gmail.com" 
+        port = 587
+        # This will start our email server
+        server = smtplib.SMTP(smtp,port)
+        # Starting the server
+        server.starttls()
+        # Now we need to login
+        server.login(gmail_user,gmail_password)
+
+        # Now we use the MIME module to structure our message.
+        msg = MIMEMultipart()
+        msg['From'] = gmail_user
+        msg['To'] = sms_gateway
+        # Make sure you add a new line in the subject
+        msg['Subject'] = f'Daily Wrap {today}\n'
+        # Make sure you also add new lines to your body
         body = f'Your workout tracker has been updated on your peloton output file via automatic scripting. So far this year, you have ridden {total_distance} \
                  miles. Your most recent ride was on  {most_recent_workout}. You are currently on pace for {current_pace} miles this year. You can access the file here: \
                 {sheets_link}\nYour Graphs can be found below:'
+        # and then attach that body
+        msg.attach(MIMEText(body, 'plain'))
 
-        email_text = '''\
+        for image in user_graphs:
+            with open(image, 'rb') as fp:
+                img = MIMEImage(fp.read(),_subtype='jpg')
+                img.add_header('Content-Disposition', 'attachment', filename= image.split('/')[-1])
         
-        From: %s
-        
-        To: %s
-        
-        Subject: %s
-        
-        %s
-        
-        '''% (sent_from,','.join(to),subject,body)
-        
-        try:
-        
-            smtp_server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-        
-            smtp_server.ehlo()
-        
-            smtp_server.login(gmail_user, gmail_password)
-        
-            smtp_server.sendmail(sent_from, to, email_text)
-        
-            smtp_server.close()
-        
-        except Exception as ex:
-        
-            print ("Something went wrong….",ex)
+        msg.attach(img)
+
+        sms = msg.as_string()
+
+        server.sendmail(gmail_user,sms_gateway,sms)
+
+        # lastly quit the server
+        server.quit()
 
 # Send the emails via SMTP
 # send_email_update(email_user_1, username_user_1, summary_df_user_1, google_sheets_link_user_1)
