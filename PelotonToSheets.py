@@ -175,7 +175,7 @@ def simplify_df_all_data (cycling_only):
     # Make the moaDF by Month
     moaDF_by_month = data_by_month.join(data_by_month_avg)
     moaDF_by_month = moaDF_by_month.fillna(0)
-    moaDF_by_month.index.rename('Month/Year', inplace=True)
+    moaDF_by_month.index.rename('Year/Month', inplace=True)
     # Make the moaDF by Week
     moaDF_by_week =data_by_week.join(data_by_week_avg)
     moaDF_by_week = moaDF_by_week.fillna(0)
@@ -317,7 +317,7 @@ def make_charts(requested_workout_data,username):
 
 def descending(moaDF_by_month, current_year_df, current_year_requested,moaDF):
 
-    moaDF_by_month.sort_values(by=['Month/Year'], inplace=True, ascending=False)
+    moaDF_by_month.sort_values(by=['Year/Month'], inplace=True, ascending=False)
     current_year_requested.sort_values(by=['Workout Date'], inplace=True, ascending=False)
     current_year_df.sort_values(by=['Workout Date'], inplace=True, ascending=False)
     moaDF.sort_values(by=['Workout Date'], inplace=True, ascending=False)
@@ -341,7 +341,7 @@ def clear_if_first(sheet1, sheet2, sheet3, goal_distance):
 
 def descending_user(moaDF_by_month, current_year_df, current_year_requested,moaDF, moaDF_by_week):
 
-    moaDF_by_month.sort_values(by=['Month/Year'], inplace=True, ascending=False)
+    moaDF_by_month.sort_values(by=['Year/Month'], inplace=True, ascending=False)
     current_year_requested.sort_values(by=['Workout Date'], inplace=True, ascending=False)
     current_year_df.sort_values(by=['Workout Date'], inplace=True, ascending=False)
     moaDF.sort_values(by=['Workout Date'], inplace=True, ascending=False)
