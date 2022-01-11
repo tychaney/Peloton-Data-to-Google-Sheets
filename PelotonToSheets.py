@@ -1,4 +1,5 @@
-# Version 1.0.1 Current As Of 09JAN22
+# Version 1.1.0 Current As Of 11JAN22 
+# Added pace per month calculation
 import os #For sending the text message
 import pandas as pd
 pd.options.mode.chained_assignment = None  # default='warn' (credit to JHJCo for catching this)
@@ -16,6 +17,7 @@ from gspread_dataframe import set_with_dataframe
 from matplotlib import pyplot as plt
 # plt.rcParams.update({'figure.max_open_warning': 0}) #Ignores the output for having too many figures in use (May apply depending on Machine capabilities)
 import seaborn as sns
+import calendar
 
 
 # This was added to ease use for those with limited Coding Experience
@@ -70,6 +72,16 @@ total_days_in_year = last_day_of_year - first_day_of_year
 total_days_in_year_float = float(total_days_in_year.days)
 days_so_far = today - first_day_of_year
 days_so_far_float = float(days_so_far.days + 1)
+
+# Month
+first_day_of_month = date(today.year, today.month, 1)
+last_day_of_month =  date(today.year, today.month, calendar.monthrange(today.year, today.month)[1])
+days_left_in_month = last_day_of_month - today
+days_left_in_month_float = float(days_left_in_month.days)
+total_days_in_month = last_day_of_month - first_day_of_month
+total_days_in_month_float = float(total_days_in_month.days)
+days_so_far_month = today - first_day_of_month
+days_so_far_month_float = float(days_so_far_month.days + 1)
 
 # Get Workout CSVs
 index = 0
@@ -189,20 +201,19 @@ def simplify_df_all_data (cycling_only):
     moaDF = workout_data_we_want.join(average_df)
     moaDF = moaDF.fillna(0)
     # Current Year by Month (Requested Data)
-    workout_data_we_want_copy = workout_data_we_want
-    workout_data_we_want_copy.index = pd.to_datetime(workout_data_we_want_copy.index)    
-    data_by_month = workout_data_we_want_copy.groupby(pd.Grouper(freq='M')).sum()
+    workout_data_we_want.index = pd.to_datetime(workout_data_we_want.index)    
+    data_by_month = workout_data_we_want.groupby(pd.Grouper(freq='M')).sum()
     data_by_month.index = data_by_month.index.strftime('%Y/%m')
     # Current Year by Week (for pace calculation Purposes) (requested data)
-    data_by_week = workout_data_we_want_copy.groupby(pd.Grouper(freq='W-SUN')).sum()
+    data_by_week = workout_data_we_want.groupby(pd.Grouper(freq='W-SUN')).sum()
     data_by_week.index = data_by_week.index.strftime('%Y/%m/%d')
-    average_df_copy = average_df
-    average_df_copy.index = pd.to_datetime(average_df_copy.index)    
+    average_df = average_df
+    average_df.index = pd.to_datetime(average_df.index)    
     # Current year by month (Average)
-    data_by_month_avg = average_df_copy.groupby(pd.Grouper(freq='M')).mean()
+    data_by_month_avg = average_df.groupby(pd.Grouper(freq='M')).mean()
     data_by_month_avg.index = data_by_month_avg.index.strftime('%Y/%m')
     # Current Year by Week (for pace calculation Purposes) (non-requested data)
-    data_by_week_avg = average_df_copy.groupby(pd.Grouper(freq='W-SUN')).mean()
+    data_by_week_avg = average_df.groupby(pd.Grouper(freq='W-SUN')).mean()
     data_by_week_avg.index = data_by_week_avg.index.strftime('%Y/%m/%d')  
     # Make the moaDF by Month
     moaDF_by_month = data_by_month.join(data_by_month_avg)
@@ -211,7 +222,9 @@ def simplify_df_all_data (cycling_only):
     # Make the moaDF by Week
     moaDF_by_week =data_by_week.join(data_by_week_avg)
     moaDF_by_week = moaDF_by_week.fillna(0)
-    return moaDF, moaDF_by_month, workout_data_we_want_copy, moaDF_by_week
+    # Add Calories per Mile
+    workout_data_we_want['Calories/Mile'] = round(workout_data_we_want['Calories Burned']/workout_data_we_want['Distance (mi)'],2)
+    return moaDF, moaDF_by_month, workout_data_we_want, moaDF_by_week
 
 # Create the Giant moaDF's (all time data)
 moaDF_user_1, moaDF_by_month_user_1, requested_user_1, moaDF_by_week_user_1 = simplify_df_all_data(cycling_only_user_1)
@@ -249,7 +262,7 @@ def calculations (goal_distance, current_year_df ,moaDF_all_time, moaDF_by_month
     miles_this_week = moaDF_by_week.iloc[-1]['Distance (mi)']
     # Miles Ridden This Month
     miles_current_month = moaDF_by_month.iloc[-1]['Distance (mi)']
-
+    pace_month = (miles_current_month / days_so_far_month_float) * (total_days_in_month_float)
     # Summary Data Frame for Sheets
     calculations = [
             'Today', 'Most Recent Workout','Goal Distance (mi)', 'Current Total Distance (mi)',
@@ -257,14 +270,14 @@ def calculations (goal_distance, current_year_df ,moaDF_all_time, moaDF_by_month
             'Total Days Elapsed This Year', 'Total Days Left This Year',
             'Current Pace by End of Year (mi)', 'Goal Distance - Pace', 'Average Ride Length (minutes)', 
             'Average Ride Output', 'Average Distance Per Ride (mi)', 
-            'Average Calories Burned Per Ride (kCal)', 'Miles Ridden This Month', 'Miles Ridden This Week (Starting Mon)'
+            'Average Calories Burned Per Ride (kCal)', 'Miles Ridden This Month', 'Pace This Month', 'Miles Ridden This Week (Starting Mon)'
             ]
     values = [
             str(today), str(most_recent_workout) ,int(goal_distance), round(total_distance, 2), 
             round (distance_from_goal, 2), round(percent_of_goal, 4), str(days_so_far_float), 
             str(days_left_in_year_float), round(pace, 2), round(pace_versus_goal, 2),round(avg_length, 2), 
             round(avg_output, 2), round(avg_distance, 2), round(avg_calories, 2), round(miles_current_month,2), 
-            round(miles_this_week, 2)
+            round(pace_month, 2), round(miles_this_week, 2)
             ]
     summary = {'Metric': calculations, 'Value': values}
     summary_df = pd.DataFrame(summary)
