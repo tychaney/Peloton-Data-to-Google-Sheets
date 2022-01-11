@@ -66,8 +66,6 @@ gmail_user = 'gmailaccount@gmail.com'
 gmail_password = 'password'
 
 # This was added to ease use for those with limited Coding Experience
-# As a part of this update, the SMTP email send function has been commented out (if you would like to utilize this feature, uncomment it out [last lines of code])
-# Also, all USER_2 and USER 3 functions have been commented out, simply uncomment to utilize
 # Pull the Admin Variables from the CSV
 login_data = pd.read_csv(folder + 'LoginData.csv')
 login_df = pd.DataFrame(login_data)
@@ -354,8 +352,8 @@ def format_for_gspread(df):
     df.index = pd.to_datetime(df.index)
     df.index = df.index.strftime('%Y-%m-%d')
 
-def find_by_postfix(postfix, folder):
-    for root, _, files in os.walk(folder):
+def find_by_postfix(postfix, graph_path):
+    for root, _, files in os.walk(graph_path):
         for file in files:
             if file.endswith(postfix):
                 yield os.path.join(root, file)
