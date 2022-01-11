@@ -1,8 +1,13 @@
-# Version 1.1.0 Current As Of 11JAN22 
-# Added pace per month calculation
+# Version 2.0.0 Current As Of 11JAN22
+# SIGNIFICANT CODE EDITING COURTESY OF JHJCo
+# Now command line inputs are available if you see errors, additionally, the code automatically iterates through users based on the CSV
+# Additional Changes include the changing of years from hard coded (2021, 2022, 2023) to current year, last year, and 2 years prior so no need to adjust code each year
+# The next edit coming soon will be the rounding of all numbers to 2 decimal places for ease of reading
+# For what started as a simple favor to my dad, the support I've gotten has been incredible, HAPPY RIDING!
+
 import os #For sending the text message
 import pandas as pd
-pd.options.mode.chained_assignment = None  # default='warn' (credit to JHJCo for catching this)
+pd.options.mode.chained_assignment = None  # default='warn'
 import plotly.express as px
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -17,50 +22,23 @@ from gspread_dataframe import set_with_dataframe
 from matplotlib import pyplot as plt
 # plt.rcParams.update({'figure.max_open_warning': 0}) #Ignores the output for having too many figures in use (May apply depending on Machine capabilities)
 import seaborn as sns
+import argparse
+import sys
 import calendar
 
-
-# This was added to ease use for those with limited Coding Experience
-# As a part of this update, the SMTP email send function has been commented out (if you would like to utilize this feature, uncomment it out [last lines of code])
-# Also, all USER_2 and USER 3 functions have been commented out, simply uncomment to utilize
-# Pull the Admin Variables from the CSV
-login_data = pd.read_csv('LoginData.csv')
-login_df = pd.DataFrame(login_data)
-
-# Create Admin Variables
-# Create Logon Variables
-# user_1
-email_user_1 = login_df.iloc[0]['email']
-password_user_1 = login_df.iloc[0]['password']
-username_user_1 = login_df.iloc[0]['username']
-peloton_csv_link_user_1 = login_df.iloc[0]['Peloton CSV Link']
-google_sheets_link_user_1 = login_df.iloc[0]['Google Sheets Link']
-phone_user_1 = login_df.iloc[0]['phone']
-# # user_2
-# email_user_2 = login_df.iloc[1]['email']
-# password_user_2 = login_df.iloc[1]['password']
-# username_user_2 = login_df.iloc[1]['username']
-# peloton_csv_link_user_2 = login_df.iloc[1]['Peloton CSV Link']
-# google_sheets_link_user_2 = login_df.iloc[1]['Google Sheets Link']
-#phone_user_2 = login_df.iloc[1]['phone']
-# # user_3
-# email_user_3 = login_df.iloc[2]['email']
-# password_user_3 = login_df.iloc[2]['password']
-# username_user_3 = login_df.iloc[2]['username']
-# peloton_csv_link_user_3 = login_df.iloc[2]['Peloton CSV Link']
-# google_sheets_link_user_3 = login_df.iloc[2]['Google Sheets Link']
-#phone_user_3 = login_df.iloc[2]['phone']
-
-# Same for Each
-service_account_path = login_df.iloc[0]['Path for Service Account JSON'] #Same for all users
-graph_path = login_df.iloc[0]['Path to Save Graphs']
-
-
-# Google API
-scopes = ['https://www.googleapis.com/auth/spreadsheets',
-'https://www.googleapis.com/auth/drive']
-credentials = ServiceAccountCredentials.from_json_keyfile_name('PelotonToGoogle.json', scopes) #see the API documentation for explanation. 'PelotonToGoogle' is what I named the file
-gc = gspread.service_account(service_account_path + 'PelotonToGoogle.json') #Note the path for the Service account is the same for user 1&2
+## Let's accept some command line input to streamline some things
+## --folder is an input arg that says what folder the LoginData.csv is in
+## --sendtext and --sendemail are boolean arguments. Set them to True to enable either of these functionalities
+## note that you will need to populate the gmail credentials and/or the mobile provider if you enable them
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--folder', type=str, help="Location of LoginData.csv with the trailing slash", required=True)
+    parser.add_argument('--sendtext', type=bool, help="Set to True to send a text message", default=False)
+    parser.add_argument('--sendemail', type=bool, help="Set to True to send an email message", default=False)
+    args = parser.parse_args()
+    folder = args.folder
+    sendtext = args.sendtext
+    sendemail = args.sendemail
 
 #Global Date Variables
 today = date.today()
@@ -83,52 +61,33 @@ total_days_in_month_float = float(total_days_in_month.days)
 days_so_far_month = today - first_day_of_month
 days_so_far_month_float = float(days_so_far_month.days + 1)
 
+# This is the email we send from if you want to use the email or text update function
+gmail_user = 'gmailaccount@gmail.com'
+gmail_password = 'password'
+
+# This was added to ease use for those with limited Coding Experience
+# As a part of this update, the SMTP email send function has been commented out (if you would like to utilize this feature, uncomment it out [last lines of code])
+# Also, all USER_2 and USER 3 functions have been commented out, simply uncomment to utilize
+# Pull the Admin Variables from the CSV
+login_data = pd.read_csv(folder + 'LoginData.csv')
+login_df = pd.DataFrame(login_data)
+
+## Below is all the internal functions. Moved to top for clarity
+
 # Get Workout CSVs
-index = 0
-def get_API_data (dataframe):
-    for index, row in dataframe.iterrows():
-        index = 0
-        email = row['email']
-        password = row['password']
-        username = row['username']
-        s = requests.Session()
-        payload = {'username_or_email': email, 'password': password}
-        s.post('https://api.onepeloton.com/auth/login', json=payload)
-        if email == email_user_1:
-            download_data = s.get(peloton_csv_link_user_1, allow_redirects=True)
-        #note to uncomment these lines to use more users
-        # elif email == email_user_2:
-            # download_data = s.get(peloton_csv_link_user_2, allow_redirects=True)
-        # elif email == email_user_3:
-            # download_data = s.get(peloton_csv_link_user_3, allow_redirects=True)
-        csv_file = str(username) + '.csv'
-        with open(csv_file, 'wb') as f:
-            f.write(download_data.content)
-        index += 1
-    return index    
+def get_peloton_data(email_user, password_user, username_user, peloton_csv_link):
+    s = requests.Session()
+    payload = {'username_or_email': email_user, 'password': password_user}
+    s.post('https://api.onepeloton.com/auth/login', json=payload)
+    download_data = s.get(peloton_csv_link, allow_redirects=True)
+    csv_file = str(username_user) + '.csv'
+    with open(csv_file, 'wb') as f:
+        f.write(download_data.content)
 
-
-# Global Goal Variables
-goal_distance_user_1 = gc.open_by_url(google_sheets_link_user_1).get_worksheet(0).acell('B19').value
-# goal_distance_user_2 = gc.open_by_url(google_sheets_link_user_2).get_worksheet(0).acell('B19').value
-# goal_distance_user_3 = gc.open_by_url(google_sheets_link_user_3).get_worksheet(0).acell('B19').value
-
-# Get the Raw Data
-get_API_data(login_df)
-peloton_data_user_1 = pd.read_csv(username_user_1 + '.csv')
-peloton_df_user_1 = pd.DataFrame(peloton_data_user_1)
-# peloton_data_user_2 = pd.read_csv(username_user_2 + '.csv')
-# peloton_df_user_2 = pd.DataFrame(peloton_data_user_2)
-# peloton_data_user_3 = pd.read_csv(username_user_3 + '.csv')
-# peloton_df_user_3 = pd.DataFrame(peloton_data_user_3)
-
-# Remove all non cycling
-def change_df_cycling_only (workout_df):
+# Remove non cycling workouts
+def change_df_cycling_only(workout_df):
     cycling_only = workout_df[workout_df['Fitness Discipline'] == 'Cycling']
     return cycling_only
-cycling_only_user_1 = change_df_cycling_only(peloton_df_user_1)
-# cycling_only_user_2 = change_df_cycling_only(peloton_df_user_2)
-# cycling_only_user_3 = change_df_cycling_only(peloton_df_user_3)
 
 # Make the big dataframe with everything in it
 def simplify_df_all_data (cycling_only):
@@ -226,22 +185,8 @@ def simplify_df_all_data (cycling_only):
     workout_data_we_want['Calories/Mile'] = round(workout_data_we_want['Calories Burned']/workout_data_we_want['Distance (mi)'],2)
     return moaDF, moaDF_by_month, workout_data_we_want, moaDF_by_week
 
-# Create the Giant moaDF's (all time data)
-moaDF_user_1, moaDF_by_month_user_1, requested_user_1, moaDF_by_week_user_1 = simplify_df_all_data(cycling_only_user_1)
-# moaDF_user_2, moaDF_by_month_user_2, requested_user_2, moaDF_by_week_user_2 = simplify_df_all_data(cycling_only_user_2)
-# moaDF_user_3, moaDF_by_month_user_3, requested_user_3, moaDF_by_week_user_3 = simplify_df_all_data(cycling_only_user_3)
-
-# Create Data Frames which only include data from current year
-current_year_df_user_1 = moaDF_user_1[~(moaDF_user_1.index <= first_day_of_year)]
-# current_year_df_user_2 = moaDF_user_2[~(moaDF_user_2.index <= first_day_of_year)]
-# current_year_df_user_3 = moaDF_user_3[~(moaDF_user_3.index <= first_day_of_year)]
-
-current_year_requested_user_1 = requested_user_1[requested_user_1.index.year == today.year]
-# current_year_requested_user_2 = requested_user_2[requested_user_2.index.year == today.year]
-# current_year_requested_user_3 = requested_user_3[requested_user_3.index.year == today.year]
-
 # Conduct Calculations
-def calculations (goal_distance, current_year_df ,moaDF_all_time, moaDF_by_month, moaDF_by_week):
+def calculations(goal_distance, current_year_df ,moaDF_all_time, moaDF_by_month, moaDF_by_week):
     # Average Length Per Ride Day
     avg_length = current_year_df['Length (minutes)'].mean()
     # Average Output Per Ride Day
@@ -277,52 +222,32 @@ def calculations (goal_distance, current_year_df ,moaDF_all_time, moaDF_by_month
             round (distance_from_goal, 2), round(percent_of_goal, 4), str(days_so_far_float), 
             str(days_left_in_year_float), round(pace, 2), round(pace_versus_goal, 2),round(avg_length, 2), 
             round(avg_output, 2), round(avg_distance, 2), round(avg_calories, 2), round(miles_current_month,2), 
-            round(pace_month, 2), round(miles_this_week, 2)
+            round(pace_month, 2),round(miles_this_week, 2)
             ]
     summary = {'Metric': calculations, 'Value': values}
     summary_df = pd.DataFrame(summary)
     return summary_df
 
-# Create the Summary DFs which will be displayed on Sheet1
-summary_df_user_1 = calculations(goal_distance_user_1, current_year_df_user_1, moaDF_user_1,moaDF_by_month_user_1, moaDF_by_week_user_1)
-# summary_df_user_2 = calculations(goal_distance_user_2, current_year_df_user_2, moaDF_user_2, moaDF_by_month_user_2, moaDF_by_week_user_2)
-# summary_df_user_3 = calculations(goal_distance_user_3, current_year_df_user_3, moaDF_user_3, moaDF_by_month_user_3, moaDF_by_week_user_3)
-
 # Create Descriptive Stats DF
-def describe_by_year (moaDF_all_time, year):
+def describe_by_year(moaDF_all_time, year):
     moaDF_all_time.index = pd.to_datetime(moaDF_all_time.index)
     moaDF_year = moaDF_all_time[moaDF_all_time.index.year == year]
     description_df = moaDF_year.replace(0, np.NaN).describe()
     return description_df
 
-# Create Describe DFs for Years Requested
-# Current Year
-descript_current_year_user_1 = describe_by_year(moaDF_user_1, today.year)
-# descript_current_year_user_2 = describe_by_year(moaDF_user_2, today.year)
-# descript_current_year_user_3 = describe_by_year(moaDF_user_3, today.year)
-# user_1
-descript_user_1_2021 = describe_by_year(moaDF_user_1, 2021)
-descript_user_1_2022 = describe_by_year(moaDF_user_1, 2022)
-descript_user_1_2023 = describe_by_year(moaDF_user_1, 2023)
-# # user_2
-# descript_user_2_2021 = describe_by_year(moaDF_user_2, 2021)
-# descript_user_2_2022 = describe_by_year(moaDF_user_2, 2022)
-# descript_user_2_2023 = describe_by_year(moaDF_user_2, 2023)
-# # user_3
-# descript_user_3_2021 = describe_by_year(moaDF_user_3, 2021)
-# descript_user_3_2022 = describe_by_year(moaDF_user_3, 2022)
-# descript_user_3_2023 = describe_by_year(moaDF_user_3, 2023)
-
-# Graph Making
-# Seaborn First
-# Make KDE Plot
-def make_sns_plots (username, moaDF_all_time):    
+def make_sns_plots(username, moaDF_all_time):    
     moaDF_all_time.index = pd.to_datetime(moaDF_all_time.index)
     avg_hr_all_time = moaDF_all_time['Avg. Heartrate']
     avg_hr_all_time = [i for i in avg_hr_all_time if i != 0]
     plt.figure(figsize = (15,8))
     sns.set_style("darkgrid")
     sns.kdeplot(avg_hr_all_time, shade=True)
+
+    # Check if graph path exists. If it doesn't, create it
+    if not os.path.isdir(graph_path + username):
+        print ("Creating Graphs directory")
+        os.mkdir(graph_path + username)
+
     # plt.legend()
     plt.title(f'{username} Average HR per Ride KDE All Time')
     plt.savefig(f'{graph_path}{username}/{username}_Average_HR_KDE.jpg')
@@ -385,23 +310,13 @@ def make_sns_plots (username, moaDF_all_time):
     plt.savefig(f'{graph_path}{username}/{username}_Boxplot_Total Output_by_month.jpg')     
     plt.clf()
 
-make_sns_plots(username_user_1, moaDF_user_1)
-# make_sns_plots(username_user_2, moaDF_user_2)
-# make_sns_plots(username_user_3, moaDF_user_3)
-
-#Chart with Plotly
 def make_charts(requested_workout_data,username):        
     figOutput_Distance = px.scatter(requested_workout_data, x = 'Total Output', y = 'Distance (mi)', color = 'Length (minutes)')
     figOutput_Distance.update_layout(autosize = True, width = 1200, height = 900, font_size = 22)
     figOutput_Distance.update_traces(marker=dict(size=12,line=dict(width=3, color='DarkSlateGrey')),
                   selector=dict(mode='markers'))
-    figOutput_Distance.write_image(graph_path + username + '/' + username +  '_Output_to_Distance2D.jpg')           
+    figOutput_Distance.write_image(graph_path + username + '/' + username +  '_Output_to_Distance2D.jpg')  
 
-make_charts(current_year_requested_user_1, username_user_1)
-# make_charts(current_year_requested_user_2, username_user_2)
-# make_charts(current_year_requested_user_3, username_user_3)
-
-# Sort DFs in Descending Order (User Preference)
 def descending(moaDF_by_month, current_year_df, current_year_requested,moaDF):
 
     moaDF_by_month.sort_values(by=['Month/Year'], inplace=True, ascending=False)
@@ -409,41 +324,6 @@ def descending(moaDF_by_month, current_year_df, current_year_requested,moaDF):
     current_year_df.sort_values(by=['Workout Date'], inplace=True, ascending=False)
     moaDF.sort_values(by=['Workout Date'], inplace=True, ascending=False)
 
-descending(moaDF_by_month_user_1,current_year_df_user_1,current_year_requested_user_1, moaDF_user_1)
-# descending(moaDF_by_month_user_2, current_year_df_user_2, current_year_requested_user_2, moaDF_user_2)
-# descending(moaDF_by_month_user_3, current_year_df_user_3, current_year_requested_user_3, moaDF_user_3)
-
-# GSpread
-# Name each sheet as a variable
-# user_1
-ws_user_11 = gc.open_by_url(google_sheets_link_user_1).get_worksheet(0)
-ws_user_12 = gc.open_by_url(google_sheets_link_user_1).get_worksheet(1)
-ws_user_13 = gc.open_by_url(google_sheets_link_user_1).get_worksheet(2)
-ws_user_14 = gc.open_by_url(google_sheets_link_user_1).get_worksheet(3)
-ws_user_15 = gc.open_by_url(google_sheets_link_user_1).get_worksheet(4)
-ws_user_16 = gc.open_by_url(google_sheets_link_user_1).get_worksheet(5)
-
-# # user_2
-# ws_user_21 = gc.open_by_url(google_sheets_link_user_2).get_worksheet(0)
-# ws_user_22 = gc.open_by_url(google_sheets_link_user_2).get_worksheet(1)
-# ws_user_23 = gc.open_by_url(google_sheets_link_user_2).get_worksheet(2)
-# ws_user_24 = gc.open_by_url(google_sheets_link_user_2).get_worksheet(3)
-# ws_user_25 = gc.open_by_url(google_sheets_link_user_2).get_worksheet(4)
-# ws_user_26 = gc.open_by_url(google_sheets_link_user_2).get_worksheet(5)
-
-# # user_3
-# ws_user_31 = gc.open_by_url(google_sheets_link_user_3).get_worksheet(0)
-# ws_user_32 = gc.open_by_url(google_sheets_link_user_3).get_worksheet(1)
-# ws_user_33 = gc.open_by_url(google_sheets_link_user_3).get_worksheet(2)
-# ws_user_34 = gc.open_by_url(google_sheets_link_user_3).get_worksheet(3)
-# ws_user_35 = gc.open_by_url(google_sheets_link_user_3).get_worksheet(4)
-# ws_user_36 = gc.open_by_url(google_sheets_link_user_3).get_worksheet(5)
-
-# Write Each to Google Sheets
-row = 1
-col = 1
-
-#Check if its the first of the year, and clear the middle 2 sheets if it is
 def clear_if_first(sheet1, sheet2, sheet3, goal_distance):
     today_date = datetime.now()
     if today_date.month == first_day_of_year.month and today_date.day == first_day_of_year.day:
@@ -461,12 +341,7 @@ def clear_if_first(sheet1, sheet2, sheet3, goal_distance):
         pass
     return sheet2, sheet3
 
-clear_if_first(ws_user_11, ws_user_12, ws_user_13, goal_distance_user_1)
-# clear_if_first(ws_user_21, ws_user_22, ws_user_23, goal_distance_user_2)
-# clear_if_first(ws_user_31, ws_user_32, ws_user_33, goal_distance_user_3)
-
-# Sort DFs in Descending Order (User Preference)
-def descending(moaDF_by_month, current_year_df, current_year_requested,moaDF, moaDF_by_week):
+def descending_user(moaDF_by_month, current_year_df, current_year_requested,moaDF, moaDF_by_week):
 
     moaDF_by_month.sort_values(by=['Month/Year'], inplace=True, ascending=False)
     current_year_requested.sort_values(by=['Workout Date'], inplace=True, ascending=False)
@@ -474,107 +349,19 @@ def descending(moaDF_by_month, current_year_df, current_year_requested,moaDF, mo
     moaDF.sort_values(by=['Workout Date'], inplace=True, ascending=False)
     moaDF_by_week.sort_values(by=['Workout Date'], inplace=True, ascending=False)
 
-descending(moaDF_by_month_user_1,current_year_df_user_1,current_year_requested_user_1, moaDF_user_1, moaDF_by_week_user_1)
-# descending(moaDF_by_month_user_2, current_year_df_user_2, current_year_requested_user_2, moaDF_user_2, moaDF_by_week_user_2)
-# descending(moaDF_by_month_user_3, current_year_df_user_3, current_year_requested_user_3, moaDF_user_3, moaDF_by_week_user_3)
 
-# DataFrame Formatting for setting to DF with GSpread
-def format_for_gspread (df):
+def format_for_gspread(df):
     df.index = pd.to_datetime(df.index)
     df.index = df.index.strftime('%Y-%m-%d')
 
-# user_1
-format_for_gspread(moaDF_user_1)
-format_for_gspread(current_year_requested_user_1)
-format_for_gspread(current_year_df_user_1)
+def find_by_postfix(postfix, folder):
+    for root, _, files in os.walk(folder):
+        for file in files:
+            if file.endswith(postfix):
+                yield os.path.join(root, file)
 
-# # user_2
-# format_for_gspread(moaDF_user_2)
-# format_for_gspread(current_year_requested_user_2)
-# format_for_gspread(current_year_df_user_2)
-
-# # user_3
-# format_for_gspread(moaDF_user_3)
-# format_for_gspread(current_year_requested_user_3)
-# format_for_gspread(current_year_df_user_3)
-
-# Add DFs to each sheet
-# user_1 First
-# SummaryDF
-set_with_dataframe(ws_user_11, summary_df_user_1,row, col)
-# Monthly
-set_with_dataframe(ws_user_11, moaDF_by_month_user_1, row=24, col=1,include_index=True )
-# Requested Data Current Year
-set_with_dataframe(ws_user_12, current_year_requested_user_1, row, col, include_index= True)
-# Current Year moaDF
-set_with_dataframe(ws_user_13,current_year_df_user_1, row, col, include_index=True)
-# Description Dataframes
-set_with_dataframe(ws_user_14, descript_current_year_user_1, row, col,include_index=True)
-# Current Year
-# 2021
-set_with_dataframe(ws_user_14, descript_user_1_2021, 12, col,include_index=True)
-# 2022
-set_with_dataframe(ws_user_14, descript_user_1_2022, 21, col,include_index=True)
-# 2023
-set_with_dataframe(ws_user_14, descript_user_1_2023, 30, col,include_index=True)
-# All Time All Data (moaDF)
-set_with_dataframe(ws_user_15, moaDF_user_1, row, col,include_index=True)
-
-# # user_2 Second
-# # SummaryDF
-# set_with_dataframe(ws_user_21, summary_df_user_2,row, col)
-# # Monthly
-# set_with_dataframe(ws_user_21, moaDF_by_month_user_2, row=24, col=1,include_index=True )
-# # Requested Data Current Year
-# set_with_dataframe(ws_user_22, current_year_requested_user_2, row, col, include_index= True)
-# # Current Year moaDF
-# set_with_dataframe(ws_user_23,current_year_df_user_2, row, col, include_index=True)
-# # Description Dataframes
-# set_with_dataframe(ws_user_24, descript_current_year_user_2, row, col,include_index=True)
-# # Current Year
-# # 2021
-# set_with_dataframe(ws_user_24, descript_user_2_2021, 12, col,include_index=True)
-# # 2022
-# set_with_dataframe(ws_user_24, descript_user_2_2022, 21, col,include_index=True)
-# # 2023
-# set_with_dataframe(ws_user_24, descript_user_2_2023, 30, col,include_index=True)
-# # All Time All Data (moaDF)
-# set_with_dataframe(ws_user_25, moaDF_user_2, row, col,include_index=True)
-
-# # user_3 Third
-# # SummaryDF
-# set_with_dataframe(ws_user_31, summary_df_user_3,row, col)
-# # Monthly
-# set_with_dataframe(ws_user_31, moaDF_by_month_user_3, row=24, col=1,include_index=True )
-# # Requested Data Current Year
-# set_with_dataframe(ws_user_32, current_year_requested_user_3, row, col, include_index= True)
-# # Current Year moaDF
-# set_with_dataframe(ws_user_33,current_year_df_user_3, row, col, include_index=True)
-# # Description Dataframes
-# set_with_dataframe(ws_user_34, descript_current_year_user_3, row, col,include_index=True)
-# # Current Year
-# # 2021
-# set_with_dataframe(ws_user_34, descript_user_3_2021, 12, col,include_index=True)
-# # 2022
-# set_with_dataframe(ws_user_34, descript_user_3_2022, 21, col,include_index=True)
-# # 2023
-# set_with_dataframe(ws_user_34, descript_user_3_2023, 30, col,include_index=True)
-# # All Time All Data (moaDF)
-# set_with_dataframe(ws_user_35, moaDF_user_3, row, col,include_index=True)
-
-# This is the email we send from if you want to use the email or text update function (currently commented out)
-gmail_user = 'gmailaccount@gmail.com'
-gmail_password = 'password'
-
-# Send Text Update
 def send_text_update(phone_number, summary_df, sheets_link, username):
     time_now = datetime.now()    
-
-    def find_by_postfix(postfix, folder):
-        for root, _, files in os.walk(folder):
-            for file in files:
-                if file.endswith(postfix):
-                    yield os.path.join(root, file)
 
     user_graphs = find_by_postfix('.jpg', graph_path + username + '/')
     
@@ -634,20 +421,9 @@ def send_text_update(phone_number, summary_df, sheets_link, username):
         # lastly quit the server
         server.quit()
 
-send_text_update(phone_user_1,summary_df_user_1,google_sheets_link_user_1,username_user_1)
-# send_text_update(phone_user_2,summary_df_user_2,google_sheets_link_user_2, username_user_2)
-# send_text_update(phone_user_3,summary_df_user_3,google_sheets_link_user_3, username_user_3)
-
-# Create the email function
-def send_email_update (email, username, summary_df,sheets_link):
+def send_email_update(email, username, summary_df,sheets_link):
     time_now = datetime.now()    
     time_now = datetime.now()    
-
-    def find_by_postfix(postfix, folder):
-        for root, _, files in os.walk(folder):
-            for file in files:
-                if file.endswith(postfix):
-                    yield os.path.join(root, file)
 
     user_graphs = find_by_postfix('.jpg', graph_path + username + '/')
     
@@ -695,7 +471,119 @@ def send_email_update (email, username, summary_df,sheets_link):
         # lastly quit the server
         server.quit()
 
-# Send the emails via SMTP
-# send_email_update(email_user_1, username_user_1, summary_df_user_1, google_sheets_link_user_1)
-# send_email_update(email_user_2, username_user_2, summary_df_user_2, google_sheets_link_user_2)
-# send_email_update(email_user_3, username_user_3, summary_df_user_3, google_sheets_link_user_3)
+## End of functions
+## This is the meat of the code
+## Iterate through the LoginData.csv and do all the things for each user
+indexcount = 0
+for row in login_df.iterrows():
+    email_user = login_df.iloc[indexcount]['email']
+    password_user = login_df.iloc[indexcount]['password']
+    username_user = login_df.iloc[indexcount]['username']
+    peloton_csv_link = login_df.iloc[indexcount]['Peloton CSV Link']
+    google_sheets_link = login_df.iloc[indexcount]['Google Sheets Link']
+    phone_user = login_df.iloc[indexcount]['phone']
+    service_account_path = login_df.iloc[indexcount]['Path for Service Account JSON'] #Same for all users
+    graph_path = login_df.iloc[indexcount]['Path to Save Graphs']
+    indexcount += 1
+
+    print("Starting work on " + email_user)
+
+    # Google API
+    scopes = ['https://www.googleapis.com/auth/spreadsheets',
+    'https://www.googleapis.com/auth/drive']
+    credentials = ServiceAccountCredentials.from_json_keyfile_name('PelotonToGoogle.json', scopes) #see the API documentation for explanation. 'PelotonToGoogle' is what I named the file
+    gc = gspread.service_account(service_account_path + 'PelotonToGoogle.json')
+
+    # Global Goal Variables
+    goal_distance = gc.open_by_url(google_sheets_link).get_worksheet(0).acell('B19').value
+
+    # Get the Raw Data
+    get_peloton_data(email_user, password_user, username_user, peloton_csv_link)
+    peloton_data_user = pd.read_csv(username_user + '.csv')
+    peloton_df_user = pd.DataFrame(peloton_data_user)
+
+    # Remove all non cycling data
+    cycling_only_user = change_df_cycling_only(peloton_df_user)
+
+    # Create the Giant moaDF's (all time data)
+    moaDF_user, moaDF_by_month_user, requested_user, moaDF_by_week_user = simplify_df_all_data(cycling_only_user)
+
+    # Create Data Frames which only include data from current year
+    current_year_df_user = moaDF_user[~(moaDF_user.index <= first_day_of_year)]
+    current_year_requested_user = requested_user[requested_user.index.year == today.year]
+
+    # Create the Summary DFs which will be displayed on Sheet1
+    summary_df_user = calculations(goal_distance, current_year_df_user, moaDF_user,moaDF_by_month_user, moaDF_by_week_user)
+
+    # Create Describe DFs for Years Requested
+    # Current Year
+    descript_current_year_user = describe_by_year(moaDF_user, today.year)
+    descript_user_last_year = describe_by_year(moaDF_user, today.year - 1)
+    descript_user_two_years_ago = describe_by_year(moaDF_user, today.year - 2)
+    descript_user_three_years_ago = describe_by_year(moaDF_user, today.year - 3)
+
+    # Graph Making
+    # Seaborn First
+    # Make KDE Plot
+    make_sns_plots(username_user, moaDF_user)
+
+    #Chart with Plotly
+    make_charts(current_year_requested_user, username_user)
+
+    # Sort DFs in Descending Order (User Preference)
+    descending(moaDF_by_month_user,current_year_df_user,current_year_requested_user, moaDF_user)
+
+    # GSpread
+    # Name each sheet as a variable
+    ws_user_11 = gc.open_by_url(google_sheets_link).get_worksheet(0)
+    ws_user_12 = gc.open_by_url(google_sheets_link).get_worksheet(1)
+    ws_user_13 = gc.open_by_url(google_sheets_link).get_worksheet(2)
+    ws_user_14 = gc.open_by_url(google_sheets_link).get_worksheet(3)
+    ws_user_15 = gc.open_by_url(google_sheets_link).get_worksheet(4)
+    ws_user_16 = gc.open_by_url(google_sheets_link).get_worksheet(5)
+
+    # Write Each to Google Sheets
+    row = 1
+    col = 1
+
+    #Check if its the first of the year, and clear the middle 2 sheets if it is
+    clear_if_first(ws_user_11, ws_user_12, ws_user_13, goal_distance)
+
+    # Sort DFs in Descending Order (User Preference)
+    descending_user(moaDF_by_month_user,current_year_df_user,current_year_requested_user, moaDF_user, moaDF_by_week_user)
+
+    # DataFrame Formatting for setting to DF with GSpread
+    format_for_gspread(moaDF_user)
+    format_for_gspread(current_year_requested_user)
+    format_for_gspread(current_year_df_user)
+
+    # Add DFs to each sheet
+    # SummaryDF
+    set_with_dataframe(ws_user_11, summary_df_user, row, col)
+    # Monthly
+    set_with_dataframe(ws_user_11, moaDF_by_month_user, row=24, col=1,include_index=True )
+    # Requested Data Current Year
+    set_with_dataframe(ws_user_12, current_year_requested_user, row, col, include_index= True)
+    # Current Year moaDF
+    set_with_dataframe(ws_user_13,current_year_df_user, row, col, include_index=True)
+    # Description Dataframes
+    # Current Year
+    set_with_dataframe(ws_user_14, descript_current_year_user, row, col,include_index=True)
+    ws_user_14.update('K2', str(today.year))
+    # Last Year
+    set_with_dataframe(ws_user_14, descript_user_last_year, 12, col,include_index=True)
+    ws_user_14.update('K12', str(today.year - 1))
+    # 2 Years Ago
+    set_with_dataframe(ws_user_14, descript_user_two_years_ago, 21, col,include_index=True)
+    ws_user_14.update('K21', str(today.year - 2))
+    # 3 Years Ago
+    set_with_dataframe(ws_user_14, descript_user_three_years_ago, 30, col,include_index=True)
+    ws_user_14.update('K30', str(today.year - 3))
+    # All Time All Data (moaDF)
+    set_with_dataframe(ws_user_15, moaDF_user, row, col,include_index=True)
+
+    if sendtext:
+        send_text_update(phone_user,summary_df_user,google_sheets_link,username_user)
+
+    if sendemail:
+        send_email_update(email_user, username_user, summary_df_user, google_sheets_link)
