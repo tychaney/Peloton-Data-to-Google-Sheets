@@ -15,7 +15,7 @@ peloton. From there, it downloads the users CSV data with all of their workout d
 we only cared about cycling data (which you will notice in the code). Several calculations are performed and
 some clean up is completed on the dataframes. That data is then passed into the user's assigned Google Sheet
 (which also includes their interactive 'goal' cell used for pace calculations [this resets on the first of each
-year]. Since I am running on a raspberry pi, I use SMTP to send an email to each user at the end of the day with
+year]. Since I am running on a raspberry pi, I use SMTP to send an email or text to each user at the end of the day with
 a daily wrap email.
 
 The script utilizes several dependencies (noted in the code itself). One of the dependencies is based on the 
