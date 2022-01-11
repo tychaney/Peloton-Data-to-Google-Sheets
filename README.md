@@ -48,10 +48,40 @@ pip install numpy
 NOTE, it is important to include the '/' at the end of each path input
 
 # For formatting of your Google Sheet:
-
+Below is a link to a sheet that updates daily at 4 PM PST based on the code.
 https://docs.google.com/spreadsheets/d/1ZfYI-NGeTK08VAQsnpXk_e_z_mnyT_7vX98O82nLxPY/edit#gid=1196700570
 
+# Google Service Account
+
+In order to run the script, you will have to set up a Google Service Account and an existing Google Sheet. Here is a quickstart guide
+
+1. Create a Google Console Cloud Platform Account (or simply link your Gmail) https://console.cloud.google.com/home/
+2. Create a new project
+3. Click on APIs & Services --> Credentials --> Manage Service Accounts --> Create Service Account
+4. Enter a name
+5. Give your Service Account access to your new project (no role required)
+6. Click Done
+7. Navigate to the APIs & Services tab
+8. Verify you see your newly created service account as having access to your project
+9. Click on Library (Leftmost column)
+10. Search Drive and Enable the Google Drive API
+11. Search Sheets and enable the Google Sheets API
+12. From the Navigation Menu, click IAM & ADMIN --> Service Accounts
+13. Click on your service account
+14. Click on 'Keys'
+15. Click 'Add Key'
+16. Select JSON
+17. Create (This is the referenced JSON file in the code itself)
+18. Move the JSON from your downloads folder to the folder where your script resides (make note of that path for entry into LoginData.CSV
+19. Open your Google Sheets File
+20. Share the File with the email of your Service Account
+
+For trouble shooting or should you not want to familiarize yourself with the basic Google API:
+https://developers.google.com/sheets/api
+
 # To Run the Script (Ensure the Login.CSV is stored in the same directory)[Note: if you already have python set as the alias, no need for 'python3']
+
+Prior to running, switch to the directory of your script to avoid errors. Should you still have issues, the code has added a '--folder' input to assist
 
 ```bash
 
