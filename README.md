@@ -53,7 +53,7 @@ pip install numpy
 NOTE, it is important to include the '/' at the end of each path input
 
 # For formatting of your Google Sheet:
-Below is a link to a sheet that updates daily at 4 PM PST based on the code.
+Below is a link to a sheet that updates daily from 11AM to 12AM UTC based on the code.
 https://docs.google.com/spreadsheets/d/1ZfYI-NGeTK08VAQsnpXk_e_z_mnyT_7vX98O82nLxPY/edit#gid=1196700570
 
 # Google Service Account
