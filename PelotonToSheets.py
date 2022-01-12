@@ -28,6 +28,7 @@ import argparse
 import sys
 import calendar
 
+version = '2.0.2'
 ## Let's accept some command line input to streamline some things
 ## --folder is an input arg that says what folder the LoginData.csv is in
 ## --sendtext and --sendemail are boolean arguments. Set them to True to enable either of these functionalities
@@ -558,13 +559,15 @@ for row in login_df.iterrows():
     # This formatter will make all DF's 2 Decimals With Consistent Column Headers (Feel Free to change Colors)
     formatter = BasicFormatter(header_background_color=Color(0,0,0),
                                 header_text_color=Color(1,1,1),
-                                decimal_format='#,##0.00')
+                                decimal_format='#,##0.00',
+                                integer_format='#,##0')
 
     # Add DFs to each sheet
     # SummaryDF
     format_with_dataframe(ws_user_11, summary_df_user,formatter, row, col,include_index=False, include_column_header=True )
     # Monthly
     format_with_dataframe(ws_user_11, moaDF_by_month_user,formatter, row=24, col=1,include_index=True, include_column_header=True )
+    ws_user_11.update('D1', f'PelotonToSheets_V:{version}')
     # Requested Data Current Year
     format_with_dataframe(ws_user_12, current_year_requested_user,formatter, row, col, include_index= True, include_column_header=True)
     # Current Year moaDF
