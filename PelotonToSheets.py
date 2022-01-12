@@ -25,10 +25,11 @@ from matplotlib import pyplot as plt
 # plt.rcParams.update({'figure.max_open_warning': 0}) #Ignores the output for having too many figures in use (May apply depending on Machine capabilities)
 import seaborn as sns
 import argparse
-import sys
 import calendar
 
 version = '2.0.2'
+git = 'https://github.com/tychaney/Peloton-Data-to-Google-Sheets'
+
 ## Let's accept some command line input to streamline some things
 ## --folder is an input arg that says what folder the LoginData.csv is in
 ## --sendtext and --sendemail are boolean arguments. Set them to True to enable either of these functionalities
@@ -568,6 +569,7 @@ for row in login_df.iterrows():
     # Monthly
     format_with_dataframe(ws_user_11, moaDF_by_month_user,formatter, row=24, col=1,include_index=True, include_column_header=True )
     ws_user_11.update('D1', f'PelotonToSheets_V:{version}')
+    ws_user_11.update('D2', git)
     # Requested Data Current Year
     format_with_dataframe(ws_user_12, current_year_requested_user,formatter, row, col, include_index= True, include_column_header=True)
     # Current Year moaDF
