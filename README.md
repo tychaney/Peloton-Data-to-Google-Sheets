@@ -1,6 +1,6 @@
 # Peloton Stats to Google Sheets with Data Visualization through Seaborn and Plotly
-
-Problem: 2 peloton users were looking for a way to track their metrics in a way that was readable and available
+## Current Version 2.0.2 (as of January 12, 2022)
+Initial Problem: 2 peloton users were looking for a way to track their metrics in a way that was readable and available
 
 Solution: this script. I personally run this at set intervals on a raspberry pi, so access to their data 
 is usable at virtually all hours.
@@ -22,9 +22,13 @@ The script utilizes several dependencies (noted in the code itself). One of the 
 google sheets API. Information can be found here: https://developers.google.com/sheets/api
 
 Feel free to reach out with any questions you have or buy me a coffee :) Venmo: @TylerChaney
+# Future Releases
+Future releases include the following:
+1. A script to automatically produce the Google Sheet (rather than utilizing the copying and pasting of the example found below)
+2. Conditional Formatting Built into the script (Not Just the Google Sheet)
 
 # General Setup
-The following dependencies are required to run this script properly
+Python3 and the following dependencies are required to run this script properly
 
 ```bash
 
@@ -36,6 +40,7 @@ pip install plotly
 pip install plotly.express
 pip install oauth2client
 pip install gspread_dataframe
+pip install gspread_formatting
 pip install numpy
 
 ```
@@ -48,7 +53,7 @@ pip install numpy
 NOTE, it is important to include the '/' at the end of each path input
 
 # For formatting of your Google Sheet:
-Below is a link to a sheet that updates daily at 4 PM PST based on the code.
+Below is a link to a sheet that updates daily from 11AM to 12AM UTC based on the code.
 https://docs.google.com/spreadsheets/d/1ZfYI-NGeTK08VAQsnpXk_e_z_mnyT_7vX98O82nLxPY/edit#gid=1196700570
 
 # Google Service Account
