@@ -409,8 +409,7 @@ def send_text_update(phone_number, summary_df, sheets_link, username):
             with open(image, 'rb') as fp:
                 img = MIMEImage(fp.read(),_subtype='jpg')
                 img.add_header('Content-Disposition', 'attachment', filename= image.split('/')[-1])
-        
-        msg.attach(img)
+            msg.attach(img)
 
         sms = msg.as_string()
 
@@ -459,8 +458,7 @@ def send_email_update(email, username, summary_df,sheets_link):
             with open(image, 'rb') as fp:
                 img = MIMEImage(fp.read(),_subtype='jpg')
                 img.add_header('Content-Disposition', 'attachment', filename= image.split('/')[-1])
-        
-        msg.attach(img)
+            msg.attach(img)
 
         sms = msg.as_string()
 
