@@ -28,7 +28,7 @@ Future releases include the following:
 2. A script to automatically produce the Google Sheet (rather than utilizing the copying and pasting of the example found below)
 
 # General Setup
-The following dependencies are required to run this script properly
+Python3 and the following dependencies are required to run this script properly
 
 ```bash
 
