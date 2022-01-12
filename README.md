@@ -201,33 +201,42 @@ for row in login_df.iterrows():
     format_for_gspread(current_year_requested_user)
     format_for_gspread(current_year_df_user)
 
+    # This formatter will make all DF's 2 Decimals With Consistent Column Headers (Feel Free to change Colors)
+    formatter = BasicFormatter(header_background_color=Color(0,0,0),
+                                header_text_color=Color(1,1,1),
+                                decimal_format='#,##0.00',
+                                integer_format='#,##0')
+
     # Add DFs to each sheet
     # SummaryDF
-    set_with_dataframe(ws_user_11, summary_df_user, row, col)
+    format_with_dataframe(ws_user_11, summary_df_user,formatter, row, col,include_index=False, include_column_header=True )
     # Monthly
-    set_with_dataframe(ws_user_11, moaDF_by_month_user, row=24, col=1,include_index=True )
+    format_with_dataframe(ws_user_11, moaDF_by_month_user,formatter, row=24, col=1,include_index=True, include_column_header=True )
+    ws_user_11.update('D1', f'PelotonToSheets_V:{version}')
+    ws_user_11.update('D2', git)
     # Requested Data Current Year
-    set_with_dataframe(ws_user_12, current_year_requested_user, row, col, include_index= True)
+    format_with_dataframe(ws_user_12, current_year_requested_user,formatter, row, col, include_index= True, include_column_header=True)
     # Current Year moaDF
-    set_with_dataframe(ws_user_13,current_year_df_user, row, col, include_index=True)
+    format_with_dataframe(ws_user_13,current_year_df_user, formatter, row, col, include_index=True,include_column_header=True)
     # Description Dataframes
     # Current Year
-    set_with_dataframe(ws_user_14, descript_current_year_user, row, col,include_index=True)
+    format_with_dataframe(ws_user_14, descript_current_year_user, formatter, row, col,include_index=True, include_column_header=True)
     ws_user_14.update('K2', str(today.year))
     # Last Year
-    set_with_dataframe(ws_user_14, descript_user_last_year, 12, col,include_index=True)
+    format_with_dataframe(ws_user_14, descript_user_last_year,formatter, 12, col,include_index=True,include_column_header=True)
     ws_user_14.update('K12', str(today.year - 1))
     # 2 Years Ago
-    set_with_dataframe(ws_user_14, descript_user_two_years_ago, 21, col,include_index=True)
+    format_with_dataframe(ws_user_14, descript_user_two_years_ago, formatter, 21, col, include_index=True, include_column_header=True)
     ws_user_14.update('K21', str(today.year - 2))
     # 3 Years Ago
-    set_with_dataframe(ws_user_14, descript_user_three_years_ago, 30, col,include_index=True)
+    format_with_dataframe(ws_user_14, descript_user_three_years_ago, formatter, 30, col,include_index=True, include_column_header=True)
     ws_user_14.update('K30', str(today.year - 3))
     # All Time All Data (moaDF)
-    set_with_dataframe(ws_user_15, moaDF_user, row, col,include_index=True)
+    format_with_dataframe(ws_user_15, moaDF_user,formatter, row, col,include_index=True, include_column_header = True)
 
     if sendtext:
         send_text_update(phone_user,summary_df_user,google_sheets_link,username_user)
 
     if sendemail:
         send_email_update(email_user, username_user, summary_df_user, google_sheets_link)
+```
