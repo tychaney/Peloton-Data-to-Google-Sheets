@@ -1,6 +1,6 @@
-# Version 2.0.2 Current As Of 12JAN22
-# Editing decimal/DF formatting so all decimals shorten to 2 decimal places
-# FROM  2.0.1 (No change)
+# Version 2.0.3 Current As Of 12JAN22
+# Re added set_with_dataframe due to error loading data
+# FROM  2.0.2 (No change)
 # Now command line inputs are available if you see errors, additionally, the code automatically iterates through users based on the CSV
 # Additional Changes include the changing of years from hard coded (2021, 2022, 2023) to current year, last year, and 2 years prior so no need to adjust code each year
 
@@ -12,7 +12,8 @@ pd.options.mode.chained_assignment = None  # default='warn'
 import plotly.express as px
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-from gspread_formatting.dataframe import format_with_dataframe, BasicFormatter #Needed for cleaner formatted Prefered over set with datafram
+from gspread_formatting.dataframe import format_with_dataframe, BasicFormatter #Needed for cleaner formatted
+from gspread_dataframe import set_with_dataframe
 from gspread_formatting import Color
 from datetime import date, datetime
 import requests
@@ -563,6 +564,27 @@ for row in login_df.iterrows():
                                 decimal_format='#,##0.00',
                                 integer_format='#,##0')
 
+
+    # Add DFs to each sheet
+    # SummaryDF
+    set_with_dataframe(ws_user_11, summary_df_user, row, col)
+    # Monthly
+    set_with_dataframe(ws_user_11, moaDF_by_month_user, row=24, col=1,include_index=True )
+    # Requested Data Current Year
+    set_with_dataframe(ws_user_12, current_year_requested_user, row, col, include_index= True)
+    # Current Year moaDF
+    set_with_dataframe(ws_user_13,current_year_df_user, row, col, include_index=True)
+    # Description Dataframes
+    # Current Year
+    set_with_dataframe(ws_user_14, descript_current_year_user, row, col,include_index=True)
+    # Last Year
+    set_with_dataframe(ws_user_14, descript_user_last_year, 12, col,include_index=True)
+    # 2 Years Ago
+    set_with_dataframe(ws_user_14, descript_user_two_years_ago, 21, col,include_index=True)
+    # 3 Years Ago
+    set_with_dataframe(ws_user_14, descript_user_three_years_ago, 30, col,include_index=True)
+    # All Time All Data (moaDF)
+    set_with_dataframe(ws_user_15, moaDF_user, row, col,include_index=True)
     # Add DFs to each sheet
     # SummaryDF
     format_with_dataframe(ws_user_11, summary_df_user,formatter, row, col,include_index=False, include_column_header=True )
