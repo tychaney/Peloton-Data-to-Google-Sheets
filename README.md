@@ -1,6 +1,8 @@
 # Peloton Stats to Google Sheets with Data Visualization through Seaborn and Plotly
+<<<<<<< HEAD
 ## Current Version 2.0.4 (as of January 13, 2022)
 ### Background
+=======
 Initial Problem: 2 peloton users were looking for a way to track their metrics in a way that was readable and available
 
 Solution: this script. I personally run this at set intervals on a raspberry pi, so access to their data 
@@ -412,6 +414,7 @@ for row in login_df.iterrows():
             username_user)
 
     if sendemail:
+<<<<<<< HEAD
         send_email_update(
             email_user,
             username_user,
@@ -426,3 +429,7 @@ for row in login_df.iterrows():
     #     time.sleep(1)
 
 ```
+=======
+        send_email_update(email_user, username_user, summary_df_user, google_sheets_link)
+```
+>>>>>>> 73128349299df2a3afddaf6369cecb39cfad7424
