@@ -429,7 +429,3 @@ for row in login_df.iterrows():
     #     time.sleep(1)
 
 ```
-=======
-        send_email_update(email_user, username_user, summary_df_user, google_sheets_link)
-```
->>>>>>> 73128349299df2a3afddaf6369cecb39cfad7424
