@@ -15,6 +15,7 @@ pip3 install plotly
 pip3 install plotly.express
 pip3 install oauth2client
 pip3 install gspread_dataframe
+ip install gspread_formatting
 pip3 install numpy
 pip3 install kaleido
 ```
