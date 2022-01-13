@@ -67,7 +67,7 @@ In order to run the script, you will have to set up a Google Service Account and
 2. Create a new project
 3. Click on APIs & Services --> Credentials --> Manage Service Accounts --> Create Service Account
 4. Enter a name
-5. Give your Service Account access to your new project (no role required)
+5. Give your Service Account access to your new project (Role=Editor)
 6. Click Done
 7. Navigate to the APIs & Services tab
 8. Verify you see your newly created service account as having access to your project
