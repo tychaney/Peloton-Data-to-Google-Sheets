@@ -28,7 +28,7 @@ import seaborn as sns
 import argparse
 import calendar
 
-version = '2.0.2'
+version = '2.0.3'
 git = 'https://github.com/tychaney/Peloton-Data-to-Google-Sheets'
 
 ## Let's accept some command line input to streamline some things
