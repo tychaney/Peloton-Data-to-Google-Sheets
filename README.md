@@ -39,11 +39,12 @@ pip install pandas
 pip install seaborn
 pip install matplotlib
 pip install gspread
-pip install plotly
-pip install plotly.express
-pip install oauth2client
 pip install gspread_dataframe
 pip install gspread_formatting
+pip install oauth2client
+pip install gclient-service-account-auth
+pip install plotly
+pip install plotly.express
 pip install numpy
 
 ```
