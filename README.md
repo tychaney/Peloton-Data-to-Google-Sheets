@@ -1,8 +1,8 @@
 # Peloton Stats to Google Sheets with Data Visualization through Seaborn and Plotly
-<<<<<<< HEAD
-## Current Version 2.0.5 (as of January 14, 2022)
+
+## Current Version 2.0.4 (as of January 13, 2022)
 ### Background
-=======
+
 Initial Problem: 2 peloton users were looking for a way to track their metrics in a way that was readable and available
 
 Solution: this script. I personally run this at set intervals on a raspberry pi, so access to their data 
@@ -39,11 +39,12 @@ pip install pandas
 pip install seaborn
 pip install matplotlib
 pip install gspread
-pip install plotly
-pip install plotly.express
-pip install oauth2client
 pip install gspread_dataframe
 pip install gspread_formatting
+pip install oauth2client
+pip install gclient-service-account-auth
+pip install plotly
+pip install plotly.express
 pip install numpy
 
 ```
@@ -67,7 +68,7 @@ In order to run the script, you will have to set up a Google Service Account and
 2. Create a new project
 3. Click on APIs & Services --> Credentials --> Manage Service Accounts --> Create Service Account
 4. Enter a name
-5. Give your Service Account access to your new project (no role required)
+5. Give your Service Account access to your new project (Role=Editor)
 6. Click Done
 7. Navigate to the APIs & Services tab
 8. Verify you see your newly created service account as having access to your project
@@ -429,7 +430,3 @@ for row in login_df.iterrows():
     #     time.sleep(1)
 
 ```
-=======
-        send_email_update(email_user, username_user, summary_df_user, google_sheets_link)
-```
->>>>>>> 73128349299df2a3afddaf6369cecb39cfad7424
