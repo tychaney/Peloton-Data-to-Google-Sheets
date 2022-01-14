@@ -1,7 +1,9 @@
-# Version 2.0.4 Current As Of 13JAN22
+# Version 2.0.5 Current As Of 14JAN22
+# Minor bug fixes, No change to outputs on this version
+
+# FROM  2.0.4 (No change)
 # Added the centering of each sheet
 # Added the option to 'pause' the script, so the service account does not get overloaded. This happens when you exceed your quota per minute
-# FROM  2.0.3 (No change)
 # Now command line inputs are available if you see errors, additionally, the code automatically iterates through users based on the CSV
 # Additional Changes include the changing of years from hard coded (2021,
 # 2022, 2023) to current year, last year, and 2 years prior so no need to
@@ -922,7 +924,8 @@ for row in login_df.iterrows():
             google_sheets_link)
 
     # Depending on how many accounts you are runnning, you may have to uncomment this block to prevent errors
-    # for remaining in range(60, 0, -1):
+    # Recommend pausing every 2 users AT A MINIMUM (Code below pauses after each user)
+    # for remaining in range(60, -1, -1):
     #     sys.stdout.write('\r')
     #     sys.stdout.write('Pausing to Avoid Service Acount Overload. {:2d} seconds remaining.'.format(remaining))
     #     sys.stdout.flush()
