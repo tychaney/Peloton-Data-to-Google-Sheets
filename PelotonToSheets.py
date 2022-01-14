@@ -9,9 +9,9 @@
 
 # For what started as a simple favor to my dad, the support I've gotten
 # has been incredible, HAPPY RIDING!
-import time  # Needed if you are using the 'pausing'
-import sys  # Needed if you are using the 'pausing'
-# Needed for cleaner formatted
+
+# import time  # Needed if you are using the 'pausing'
+# import sys  # Needed if you are using the 'pausing'
 from gspread_formatting.dataframe import format_with_dataframe, BasicFormatter
 import calendar
 import argparse
@@ -555,9 +555,13 @@ def send_text_update(phone_number, summary_df, sheets_link, username):
         # Make sure you add a new line in the subject
         msg['Subject'] = f'Daily Wrap {today}\n'
         # Make sure you also add new lines to your body
-        body = f'Your workout tracker has been updated on your peloton output file via automatic scripting. So far this year, you have ridden {total_distance} \
-                 miles. Your most recent ride was on  {most_recent_workout}. You are currently on pace for {current_pace} miles this year. You can access the file here: \
-                {sheets_link}\nYour Graphs can be found below:'
+        body = f'Your workout tracker has been updated on your peloton \
+                    output file via automatic scripting. So far this year,\
+                         you have ridden {total_distance} miles. Your most \
+                             recent ride was on  {most_recent_workout}. You are \
+                                 currently on pace for {current_pace} miles this year.\
+                                      You can access the file here: \
+                                        {sheets_link}\nYour Graphs can be found below:'
         # and then attach that body
         msg.attach(MIMEText(body, 'plain'))
 
@@ -606,9 +610,13 @@ def send_email_update(email, username, summary_df, sheets_link):
         # Make sure you add a new line in the subject
         msg['Subject'] = f'Daily Wrap {today}\n'
         # Make sure you also add new lines to your body
-        body = f'Your workout tracker has been updated on your peloton output file via automatic scripting. So far this year, you have ridden {total_distance} \
-                 miles. Your most recent ride was on  {most_recent_workout}. You are currently on pace for {current_pace} miles this year. You can access the file here: \
-                {sheets_link}\nYour Graphs can be found below:'
+        body = f'Your workout tracker has been updated on your peloton \
+                    output file via automatic scripting. So far this year,\
+                         you have ridden {total_distance} miles. Your most \
+                             recent ride was on  {most_recent_workout}. You are \
+                                 currently on pace for {current_pace} miles this year.\
+                                      You can access the file here: \
+                                        {sheets_link}\nYour Graphs can be found below:'
         # and then attach that body
         msg.attach(MIMEText(body, 'plain'))
 
@@ -886,8 +894,6 @@ for row in login_df.iterrows():
     format_with_dataframe(
         ws_user_15,
         moaDF_user,
-        CellFormat(
-            horizontalAlignment='CENTER'),
         formatter,
         row,
         col,
