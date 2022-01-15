@@ -38,7 +38,7 @@ plt.rcParams.update({'figure.max_open_warning': 0}) #Ignores the output
 # for having too many figures in use (May apply depending on Machine
 # capabilities and number of users)
 
-version = '2.0.4'
+version = '2.0.5'
 git = 'https://github.com/tychaney/Peloton-Data-to-Google-Sheets'
 
 # Let's accept some command line input to streamline some things
