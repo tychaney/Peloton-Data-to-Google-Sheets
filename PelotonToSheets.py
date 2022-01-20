@@ -1,7 +1,7 @@
-# Version 2.0.5 Current As Of 14JAN22
-# Minor bug fixes, No change to outputs on this version
+# Version 2.0.6 Current As Of 20JAN22
+# Minor bug fixes for calculation of current week miles
 
-# FROM  2.0.4 (No change)
+# FROM  2.0.5 (No change)
 # Added the centering of each sheet
 # Added the option to 'pause' the script, so the service account does not get overloaded. This happens when you exceed your quota per minute
 # Now command line inputs are available if you see errors, additionally, the code automatically iterates through users based on the CSV
@@ -25,7 +25,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import smtplib
 import requests
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from gspread_formatting import Color, CellFormat, format_cell_range
 from gspread_dataframe import set_with_dataframe
 from oauth2client.service_account import ServiceAccountCredentials
@@ -38,7 +38,7 @@ plt.rcParams.update({'figure.max_open_warning': 0}) #Ignores the output
 # for having too many figures in use (May apply depending on Machine
 # capabilities and number of users)
 
-version = '2.0.5'
+version = '2.0.6'
 git = 'https://github.com/tychaney/Peloton-Data-to-Google-Sheets'
 
 # Let's accept some command line input to streamline some things
@@ -272,7 +272,11 @@ def calculations(
     # new years
     most_recent_workout = moaDF_all_time.index[-1]
     # Miles Ridden This Week
-    miles_this_week = moaDF_by_week.iloc[-1]['Distance (mi)']
+    last_monday = (today - timedelta(days=today.weekday()+1)).strftime('%Y/%m/%d')
+    if moaDF_by_week.index[-2] == last_monday:
+        miles_this_week = moaDF_by_week.iloc[-1]['Distance (mi)']
+    else:
+        miles_this_week = 0
     # Miles Ridden This Month
     miles_current_month = moaDF_by_month.iloc[-1]['Distance (mi)']
     pace_month = (miles_current_month / days_so_far_month_float) * \
