@@ -1,6 +1,6 @@
 # Peloton Stats to Google Sheets with Data Visualization through Seaborn and Plotly
 
-## Current Version 2.0.5 (as of January 14, 2022)
+## Current Version 2.0.6 (as of January 20, 2022)
 ### Background
 
 Initial Problem: 2 peloton users were looking for a way to track their metrics in a way that was readable and available
