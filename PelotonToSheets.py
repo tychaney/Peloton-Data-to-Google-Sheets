@@ -1,7 +1,7 @@
-# Version 2.0.6 Current As Of 20JAN22
-# Minor bug fixes for calculation of current week miles
+# Version 2.0.7 Current As Of 22JAN22
+# Added Cumulative Distance Calculations
 
-# FROM  2.0.5 (No change)
+# FROM  2.0.6 (No change)
 # Added the centering of each sheet
 # Added the option to 'pause' the script, so the service account does not get overloaded. This happens when you exceed your quota per minute
 # Now command line inputs are available if you see errors, additionally, the code automatically iterates through users based on the CSV
@@ -38,7 +38,7 @@ plt.rcParams.update({'figure.max_open_warning': 0}) #Ignores the output
 # for having too many figures in use (May apply depending on Machine
 # capabilities and number of users)
 
-version = '2.0.6'
+version = '2.0.7'
 git = 'https://github.com/tychaney/Peloton-Data-to-Google-Sheets'
 
 # Let's accept some command line input to streamline some things
@@ -243,6 +243,7 @@ def simplify_df_all_data(cycling_only):
         workout_data_we_want['Calories Burned'] /
         workout_data_we_want['Distance (mi)'],
         2)
+
     return moaDF, moaDF_by_month, workout_data_we_want, moaDF_by_week
 
 # Conduct Calculations
@@ -707,6 +708,11 @@ for row in login_df.iterrows():
     descript_user_two_years_ago = describe_by_year(moaDF_user, today.year - 2)
     descript_user_three_years_ago = describe_by_year(
         moaDF_user, today.year - 3)
+
+    #Add CumSum Columns
+    moaDF_user['Cumulative Distance (mi)'] = moaDF_user['Distance (mi)'].cumsum()
+    current_year_df_user['Cumulative Distance (mi)'] = current_year_df_user['Distance (mi)'].cumsum()
+    current_year_requested_user['Cumulative Distance (mi)'] = current_year_requested_user['Distance (mi)'].cumsum()
 
     # Graph Making
     # Seaborn First
