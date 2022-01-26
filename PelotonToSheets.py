@@ -1,13 +1,9 @@
-# Version 2.0.7 Current As Of 22JAN22
-# Added Cumulative Distance Calculations
+# Version 2.0.8 Current As Of 26JAN22
+# Added 'Progress' Cells
 
 # FROM  2.0.6 (No change)
-# Added the centering of each sheet
-# Added the option to 'pause' the script, so the service account does not get overloaded. This happens when you exceed your quota per minute
-# Now command line inputs are available if you see errors, additionally, the code automatically iterates through users based on the CSV
-# Additional Changes include the changing of years from hard coded (2021,
-# 2022, 2023) to current year, last year, and 2 years prior so no need to
-# adjust code each year
+# Added Cumulative Distance Calculations
+
 
 # For what started as a simple favor to my dad, the support I've gotten
 # has been incredible, HAPPY RIDING!
@@ -38,7 +34,7 @@ plt.rcParams.update({'figure.max_open_warning': 0}) #Ignores the output
 # for having too many figures in use (May apply depending on Machine
 # capabilities and number of users)
 
-version = '2.0.7'
+version = '2.0.8'
 git = 'https://github.com/tychaney/Peloton-Data-to-Google-Sheets'
 
 # Let's accept some command line input to streamline some things
@@ -529,6 +525,8 @@ def send_text_update(phone_number, summary_df, sheets_link, username):
         pass
 
     else:
+        gc.open_by_url(
+            google_sheets_link).get_worksheet(0).update('H2', 'Sending Email Update')
         current_pace = summary_df.iloc[8]['Value']
         total_distance = summary_df.iloc[3]['Value']
         most_recent_workout = summary_df.iloc[1]['Value']
@@ -597,6 +595,8 @@ def send_email_update(email, username, summary_df, sheets_link):
         pass
 
     else:
+        gc.open_by_url(
+            google_sheets_link).get_worksheet(0).update('H2', 'Sending Email Update')
         current_pace = summary_df.iloc[8]['Value']
         total_distance = summary_df.iloc[3]['Value']
         most_recent_workout = summary_df.iloc[1]['Value']
@@ -672,6 +672,8 @@ for row in login_df.iterrows():
     # Global Goal Variables
     goal_distance = gc.open_by_url(
         google_sheets_link).get_worksheet(0).acell('B19').value
+    gc.open_by_url(
+        google_sheets_link).get_worksheet(0).update('H1', 'Update in Progress')
 
     # Get the Raw Data
     get_peloton_data(
@@ -681,9 +683,13 @@ for row in login_df.iterrows():
         peloton_csv_link)
     peloton_data_user = pd.read_csv(username_user + '.csv')
     peloton_df_user = pd.DataFrame(peloton_data_user)
+    gc.open_by_url(
+        google_sheets_link).get_worksheet(0).update('H2', 'Gathering Peloton Data')
 
     # Remove all non cycling data
     cycling_only_user = change_df_cycling_only(peloton_df_user)
+    gc.open_by_url(
+        google_sheets_link).get_worksheet(0).update('H2', 'Preparing Data for Import')
 
     # Create the Giant moaDF's (all time data)
     moaDF_user, moaDF_by_month_user, requested_user, moaDF_by_week_user = simplify_df_all_data(
@@ -717,6 +723,8 @@ for row in login_df.iterrows():
     # Graph Making
     # Seaborn First
     # Make KDE Plot
+    gc.open_by_url(
+        google_sheets_link).get_worksheet(0).update('H2', 'Preparing Graphs')
     make_sns_plots(username_user, moaDF_user)
 
     # Chart with Plotly
@@ -754,6 +762,9 @@ for row in login_df.iterrows():
         moaDF_user,
         moaDF_by_week_user)
 
+
+    gc.open_by_url(
+        google_sheets_link).get_worksheet(0).update('H2', 'Tidying Up')
     # DataFrame Formatting for setting to DF with GSpread
     format_for_gspread(moaDF_user)
     format_for_gspread(current_year_requested_user)
@@ -932,6 +943,9 @@ for row in login_df.iterrows():
             username_user,
             summary_df_user,
             google_sheets_link)
+    
+    ws_user_11.update('H1', 'Update Complete:')
+    ws_user_11.update('H2', f'{datetime.now()}')
 
     # Depending on how many accounts you are runnning, you may have to uncomment this block to prevent errors
     # Recommend pausing every 2 users AT A MINIMUM (Code below pauses after each user)
