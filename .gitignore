@@ -1,5 +1,8 @@
 .DS_Store
-.isort.cfg
+# Ignore all CFG
+*.cfg
+
 .flake8
+
 .markdownlint.yaml
 
