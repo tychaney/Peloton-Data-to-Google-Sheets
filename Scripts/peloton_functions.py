@@ -6,6 +6,7 @@ from datetime import date, datetime, timedelta
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+
 import gspread
 import numpy as np
 import pandas as pd
@@ -13,7 +14,6 @@ import plotly.express as px
 import requests
 import seaborn as sns
 from matplotlib import pyplot as plt
-
 
 pd.options.mode.chained_assignment = None  # default='warn'
 plt.rcParams.update({"figure.max_open_warning": 0})  # Ignores the output
@@ -510,7 +510,7 @@ def send_text_update(phone_number, summary_df, sheets_link, username):
         pass
 
     else:
-        gc.open_by_url(google_sheets_link).get_worksheet(0).update(
+        gc.open_by_url(sheets_link).get_worksheet(0).update(
             "H2", "Sending Email Update"
         )
         current_pace = summary_df.iloc[8]["Value"]
@@ -582,7 +582,7 @@ def send_email_update(email, username, summary_df, sheets_link):
         pass
 
     else:
-        gc.open_by_url(google_sheets_link).get_worksheet(0).update(
+        gc.open_by_url(sheets_link).get_worksheet(0).update(
             "H2", "Sending Email Update"
         )
         current_pace = summary_df.iloc[8]["Value"]

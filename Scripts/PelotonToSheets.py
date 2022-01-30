@@ -4,9 +4,8 @@
 from gspread_dataframe import set_with_dataframe
 from gspread_formatting import CellFormat, Color, format_cell_range
 from gspread_formatting.dataframe import BasicFormatter, format_with_dataframe
-
-from peloton_functions import *
 from oauth2client.service_account import ServiceAccountCredentials
+from peloton_functions import *
 
 # Iterate through the LoginData.csv and do all the things for each user
 indexcount = 0

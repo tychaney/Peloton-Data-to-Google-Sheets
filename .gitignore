@@ -1,2 +1,5 @@
 .DS_Store
+.isort.cfg
+.flake8
+.markdownlint.yaml
 
