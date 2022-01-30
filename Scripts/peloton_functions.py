@@ -1,4 +1,3 @@
-import argparse
 import calendar
 import os  # For sending the text message
 import smtplib
@@ -23,37 +22,6 @@ plt.rcParams.update({"figure.max_open_warning": 0})  # Ignores the output
 version = "2.1.0"
 git = "https://github.com/tychaney/Peloton-Data-to-Google-Sheets"
 
-# Let's accept some command line input to streamline some things
-# --folder is an input arg that says what folder the LoginData.csv is in
-# --sendtext and --sendemail are boolean arguments. Set them to True to enable either of these functionalities
-# note that you will need to populate the gmail credentials and/or the
-# mobile provider if you enable them
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    # Set this to True if you are runninf the script in a different directory
-    # than your LoginData.csv (Go to Line 103 for more details)
-    parser.add_argument(
-        "--folder",
-        type=str,
-        help="Location of LoginData.csv with the trailing slash",
-        required=False,
-    )
-    parser.add_argument(
-        "--sendtext",
-        type=bool,
-        help="Set to True to send a text message",
-        default=False,
-    )
-    parser.add_argument(
-        "--sendemail",
-        type=bool,
-        help="Set to True to send an email message",
-        default=False,
-    )
-    args = parser.parse_args()
-    folder = args.folder
-    sendtext = args.sendtext
-    sendemail = args.sendemail
 
 # Global Date Variables
 today = date.today()

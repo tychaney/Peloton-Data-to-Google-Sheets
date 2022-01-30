@@ -8,5 +8,3 @@
 
 # Ignore all Log
 *.log
-# Ignore Trunk
-.trunk
