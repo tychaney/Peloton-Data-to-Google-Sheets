@@ -3,6 +3,9 @@
 *.cfg
 
 .flake8
+#Ignore all yaml
+*.yaml
 
-.markdownlint.yaml
+# Ignore all Log
+*.log
 
