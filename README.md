@@ -12,12 +12,12 @@ Version 2.1.2 also includes the blank JSON which is not intended for use. This i
 As of Version 2.1.0, the script has been split into multiple files. All functions are on their own and are imported into the peloton_to_sheets.py script. Functionality remains the same, especially if being run passively via a raspberry pi or similar device.
 
 ## Example Google Sheet (use this for formatting) with Selected Example Data Displays
-The sheet itself can be found here
+The sheet itself can be found at the following link:
 https://docs.google.com/spreadsheets/d/1ZfYI-NGeTK08VAQsnpXk_e_z_mnyT_7vX98O82nLxPY/edit?usp=sharing
 
 
 ### Aggregate Data Display
-<img width="1315" alt="Screen Shot 2022-01-31 at 12 52 53 PM" src="https://user-images.githubusercontent.com/94143619/151871327-335d5da7-2fbe-49c7-8f59-a092a5c88503.png">
+<img width="1315" alt="Screen Shot 2022-01-31 at 1 01 00 PM" src="https://user-images.githubusercontent.com/94143619/151872445-db4a6f74-e3a7-4897-aa81-88652ed41fb4.png">
 
 ### Requested Data Display (Highly Correlated Numerical Data)[Current Year]
 <img width="747" alt="Screen Shot 2022-01-31 at 12 53 55 PM" src="https://user-images.githubusercontent.com/94143619/151871524-772aaeb9-66d8-4c99-909c-aa289338e9f3.png">
