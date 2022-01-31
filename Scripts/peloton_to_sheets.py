@@ -62,7 +62,6 @@ for row in login_df.iterrows():
     # Same for all users
     service_account_path = login_df.iloc[indexcount]["Path for Service Account JSON"]
     graph_path = login_df.iloc[indexcount]["Path to Save Graphs"]
-    indexcount += 1
 
     print("Starting work on " + email_user)
 
@@ -343,7 +342,9 @@ for row in login_df.iterrows():
 
     ws_user_11.update("H1", "Update Complete:")
     ws_user_11.update("H2", f"{datetime.now()}")
-
-if pause:
-    pauser()
+    
+    indexcount += 1
+    
+    if pause:
+        pauser()
 
