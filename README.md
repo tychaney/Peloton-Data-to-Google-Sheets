@@ -4,6 +4,7 @@
 ## Current Version 2.1.2 (as of February 1, 2022)
 
 Version 2.1.2 includes the initial commit of the sheet_builder.py file. this file can be used to generate your spreadsheet. It will not, however include the charts present in the example file below, but it will assist in expediting any copy and pasting you choose to do for formatting purposes.
+Also included is the addition of the 'pause' arg which defaults to false. This is to combat the "Quota Exceeded" Error which occurs to service accounts which exceed their allotted edits per period (occurs with multiple users)
 
 As of Version 2.1.0, the script has been split into multiple files. All functions are on their own and are imported into the peloton_to_sheets.py script. Functionality remains the same, especially if being run passively via a raspberry pi or similar device.
 
