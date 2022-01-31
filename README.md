@@ -1,7 +1,9 @@
 # Peloton Stats to Google Sheets with Data Visualization through Seaborn and Plotly
 
 
-## Current Version 2.1.1 (as of January 31, 2022)
+## Current Version 2.1.2 (as of February 1, 2022)
+
+Version 2.1.2 includes the initial commit of the sheet_builder.py file. this file can be used to generate your spreadsheet. It will not, however include the charts present in the example file below, but it will assist in expediting any copy and pasting you choose to do for formatting purposes.
 
 As of Version 2.1.0, the script has been split into multiple files. All functions are on their own and are imported into the peloton_to_sheets.py script. Functionality remains the same, especially if being run passively via a raspberry pi or similar device.
 
@@ -34,9 +36,8 @@ Feel free to reach out with any questions you have or buy me a coffee :) Venmo: 
 
 Future releases include the following:
 
-1. A script to automatically produce the Google Sheet (rather than utilizing the copying and pasting of the example found below)
-2. PR calculation functionality
-3. Setup files to automatically set up user machine
+1. PR calculation functionality
+2. Setup files to automatically set up user machine (Releases aid in this process)
 
 ## General Setup
 
