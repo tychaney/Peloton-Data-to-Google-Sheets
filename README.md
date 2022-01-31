@@ -11,17 +11,17 @@ Version 2.1.2 also includes the blank JSON which is not intended for use. This i
 
 As of Version 2.1.0, the script has been split into multiple files. All functions are on their own and are imported into the peloton_to_sheets.py script. Functionality remains the same, especially if being run passively via a raspberry pi or similar device.
 
+## Example Google Sheet (use this for formatting)
+
+<img width="1315" alt="v2 1 2 ScreenShot" src="https://user-images.githubusercontent.com/94143619/151870807-b1c32741-edf4-4597-88ab-3228d270de36.png">
+https://docs.google.com/spreadsheets/d/1ZfYI-NGeTK08VAQsnpXk_e_z_mnyT_7vX98O82nLxPY/edit?usp=sharing
+
 ## Background
 
 Initial Problem: 2 peloton users were looking for a way to track their metrics in a way that was readable and available
 
 Solution: this script. I personally run this at set intervals on a raspberry pi, so access to their data
 is usable at virtually all hours.
-
-Example Google Sheet (use this for formatting)
-
-<img width="1315" alt="v2 1 2 ScreenShot" src="https://user-images.githubusercontent.com/94143619/151870807-b1c32741-edf4-4597-88ab-3228d270de36.png">
-https://docs.google.com/spreadsheets/d/1ZfYI-NGeTK08VAQsnpXk_e_z_mnyT_7vX98O82nLxPY/edit?usp=sharing
 
 Here's how it works. The code relies on first having built a csv file which contains the headings of 'name',
 'username', 'email', and 'password' (for Peloton). It also includes other unique path and link variables to
