@@ -19,6 +19,8 @@ Solution: this script. I personally run this at set intervals on a raspberry pi,
 is usable at virtually all hours.
 
 Example Google Sheet (use this for formatting)
+
+<img width="1315" alt="v2 1 2 ScreenShot" src="https://user-images.githubusercontent.com/94143619/151870807-b1c32741-edf4-4597-88ab-3228d270de36.png">
 https://docs.google.com/spreadsheets/d/1ZfYI-NGeTK08VAQsnpXk_e_z_mnyT_7vX98O82nLxPY/edit?usp=sharing
 
 Here's how it works. The code relies on first having built a csv file which contains the headings of 'name',
