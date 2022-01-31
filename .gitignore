@@ -1,2 +1,9 @@
 .DS_Store
 
+
+.flake8
+#Ignore all yaml
+*.yaml
+
+# Ignore all Log
+*.log
