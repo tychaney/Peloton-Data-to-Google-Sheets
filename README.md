@@ -3,12 +3,13 @@
 
 ## Current Version 2.1.2 (as of February 1, 2022)
 
-Version 2.1.2 includes the initial commit of the sheet_builder.py file. this file can be used to generate your spreadsheet. It will not, however include the charts present in the example file below, but it will assist in expediting any copy and pasting you choose to do for formatting purposes.
+Version 2.1.2 includes the initial commit of the sheet_builder.py file. This file can be used to generate your spreadsheet. It will not, however (as of initial release), include the charts or conditional formatting present in the example file below, but it will assist in expediting any copy and pasting you choose to do for formatting purposes. As such, recommend running this file first to create your sheet. You can add the sheet to your Google Drive after it has been shared with you.
+
 Also included is the addition of the 'pause' arg which defaults to false. This is to combat the "Quota Exceeded" Error which occurs to service accounts which exceed their allotted edits per period (occurs with multiple users)
 
 As of Version 2.1.0, the script has been split into multiple files. All functions are on their own and are imported into the peloton_to_sheets.py script. Functionality remains the same, especially if being run passively via a raspberry pi or similar device.
 
-### Background
+## Background
 
 Initial Problem: 2 peloton users were looking for a way to track their metrics in a way that was readable and available
 
@@ -24,8 +25,7 @@ simplify execution for inexperienced users. The script pulls data from this file
 peloton. From there, it downloads the users CSV data with all of their workout data. For my specific needs,
 we only cared about cycling data (which you will notice in the code). Several calculations are performed and
 some clean up is completed on the dataframes. That data is then passed into the user's assigned Google Sheet
-(which also includes their interactive 'goal' cell used for pace calculations [this resets on the first of each
-year]. Since I am running on a raspberry pi, I use SMTP to send an email or text to each user at the end of the day with
+(which also includes their interactive 'goal' cell used for pace calculations [this resets on the first of each year]. Since I am running on a raspberry pi, I use SMTP to send an email or text to each user at the end of the day with
 a daily wrap email.
 
 The script utilizes several dependencies (noted in the code itself). One of the dependencies is based on the
