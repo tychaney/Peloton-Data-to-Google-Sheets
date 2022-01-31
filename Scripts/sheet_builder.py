@@ -1,7 +1,7 @@
 # This script is designed to build your sheet
 # MUST HAVE A SERVICE ACCOUNT SET UP IN ORDER FOR THIS TO WORK
 # The service account '.json' must also be present
-# Please note, this will NOT Generate the charts
+# Please note, this will NOT generate the charts present in the example file
 
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
