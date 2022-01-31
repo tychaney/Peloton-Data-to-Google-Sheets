@@ -40,7 +40,8 @@ for row in login_df.iterrows():
     # Share the spreadsheet
     sh.share(email_user, perm_type='user', role='owner', notify=True)
     # Add Each Sheet
-    sheet1 = sh.add_worksheet(title="Aggregate Data", rows="100", cols="20")
+    sheet1 = sh.add_worksheet(
+        title="Aggregate Data", rows="100", cols="20")
     sheet2 = sh.add_worksheet(
         title="Workout Data Requested", rows="100", cols="20")
     sheet3 = sh.add_worksheet(
