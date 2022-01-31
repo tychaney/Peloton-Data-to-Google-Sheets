@@ -43,5 +43,7 @@ for row in login_df.iterrows():
         title="Description of All Data", rows="100", cols="20")
     sheet5 = sh.add_worksheet(
         title="Lifetime/Historical Data", rows="100", cols="20")
+    sheet6 = sh.add_worksheet(
+        title="Annual Summary", rows="100", cols="20")
     
     indexcount += 1
