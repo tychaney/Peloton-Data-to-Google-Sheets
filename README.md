@@ -1,10 +1,7 @@
 # Peloton Stats to Google Sheets with Data Visualization through Seaborn and Plotly
 
-<<<<<<< Updated upstream
-## Current Version 2.1.0 (as of January 30, 2022)
-=======
+
 ## Current Version 2.1.1 (as of January 31, 2022)
->>>>>>> Stashed changes
 
 As of Version 2.1.0, the script has been split into multiple files. All functions are on their own and are imported into the peloton_to_sheets.py script. Functionality remains the same, especially if being run passively via a raspberry pi or similar device.
 
