@@ -15,15 +15,8 @@ login_df = pd.DataFrame(login_data)
 indexcount = 0
 for row in login_df.iterrows():
     email_user = login_df.iloc[indexcount]['email']
-    password_user = login_df.iloc[indexcount]['password']
     username_user = login_df.iloc[indexcount]['username']
-    peloton_csv_link = login_df.iloc[indexcount]['Peloton CSV Link']
-    google_sheets_link = login_df.iloc[indexcount]['Google Sheets Link']
-    phone_user = login_df.iloc[indexcount]['phone']
-    # Same for all users
-    service_account_path = login_df.iloc[indexcount]['Path for Service Account JSON']
-    graph_path = login_df.iloc[indexcount]['Path to Save Graphs']
-    indexcount += 1
+    service_account_path = login_df.iloc[indexcount]['Path for Service Account JSON']     # Same for all users
 
     # Google API
     scopes = ['https://www.googleapis.com/auth/spreadsheets',
@@ -50,3 +43,5 @@ for row in login_df.iterrows():
         title="Description of All Data", rows="100", cols="20")
     sheet5 = sh.add_worksheet(
         title="Lifetime/Historical Data", rows="100", cols="20")
+    
+    indexcount += 1
