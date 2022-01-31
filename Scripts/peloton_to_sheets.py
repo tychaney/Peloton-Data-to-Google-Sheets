@@ -1,5 +1,6 @@
-# Version 2.1.0 Current As Of 01FEB22
+# Version 2.1.1 Current As Of 31JAN22
 # Simplified into 2 files (functions and script)
+#Fixed Pace Calculation (Month) bug
 
 import argparse
 
@@ -8,7 +9,6 @@ from gspread_formatting import CellFormat, Color, format_cell_range
 from gspread_formatting.dataframe import BasicFormatter, format_with_dataframe
 from oauth2client.service_account import ServiceAccountCredentials
 
-# trunk-ignore(flake8/F403)
 from peloton_functions import *
 
 # Let's accept some command line input to streamline some things

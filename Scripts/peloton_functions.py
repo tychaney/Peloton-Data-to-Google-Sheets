@@ -13,13 +13,16 @@ import plotly.express as px
 import requests
 import seaborn as sns
 from matplotlib import pyplot as plt
+# For use with timer if necessary
+# import sys
+# import time
 
 pd.options.mode.chained_assignment = None  # default='warn'
 plt.rcParams.update({"figure.max_open_warning": 0})  # Ignores the output
 # for having too many figures in use (May apply depending on Machine
 # capabilities and number of users)
 
-version = "2.1.0"
+version = "2.1.1" # Current as of 31JAN22
 git = "https://github.com/tychaney/Peloton-Data-to-Google-Sheets"
 
 
@@ -42,7 +45,7 @@ last_day_of_month = date(
 days_left_in_month = last_day_of_month - today
 days_left_in_month_float = float(days_left_in_month.days)
 total_days_in_month = last_day_of_month - first_day_of_month
-total_days_in_month_float = float(total_days_in_month.days)
+total_days_in_month_float = float(total_days_in_month.days + 1)
 days_so_far_month = today - first_day_of_month
 days_so_far_month_float = float(days_so_far_month.days + 1)
 
