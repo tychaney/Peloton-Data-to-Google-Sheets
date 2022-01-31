@@ -13,9 +13,8 @@ import plotly.express as px
 import requests
 import seaborn as sns
 from matplotlib import pyplot as plt
-# For use with timer if necessary
-# import sys
-# import time
+import sys
+import time
 
 pd.options.mode.chained_assignment = None  # default='warn'
 plt.rcParams.update({"figure.max_open_warning": 0})  # Ignores the output
@@ -622,3 +621,10 @@ def send_email_update(email, username, summary_df, sheets_link):
 
         # lastly quit the server
         server.quit()
+
+def pauser ():
+    for remaining in range(60, -1, -1):
+        sys.stdout.write('\r')
+        sys.stdout.write('Pausing to Avoid Service Acount Overload. {:2d} seconds remaining.'.format(remaining))
+        sys.stdout.flush()
+        time.sleep(1)

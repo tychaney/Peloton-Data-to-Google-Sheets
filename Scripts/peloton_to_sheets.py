@@ -38,10 +38,17 @@ if __name__ == "__main__":
         help="Set to True to send an email message",
         default=False,
     )
+    parser.add_argument(
+        '--pause',
+        type=bool,
+        help='Set to True if experiencing a Service Account Quota Exceeded Error (for multiple users)',
+        default = False,
+    )
     args = parser.parse_args()
     folder = args.folder
     sendtext = args.sendtext
     sendemail = args.sendemail
+    pause= args.pause
 
 # Iterate through the LoginData.csv and do all the things for each user
 indexcount = 0
@@ -337,10 +344,6 @@ for row in login_df.iterrows():
     ws_user_11.update("H1", "Update Complete:")
     ws_user_11.update("H2", f"{datetime.now()}")
 
-    # Depending on how many accounts you are runnning, you may have to uncomment this block to prevent errors
-    # Recommend pausing every 2 users AT A MINIMUM (Code below pauses after each user)
-    # for remaining in range(60, -1, -1):
-    #     sys.stdout.write('\r')
-    #     sys.stdout.write('Pausing to Avoid Service Acount Overload. {:2d} seconds remaining.'.format(remaining))
-    #     sys.stdout.flush()
-    #     time.sleep(1)
+if pause:
+    pauser()
+
