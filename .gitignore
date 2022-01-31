@@ -1,6 +1,5 @@
 .DS_Store
-# Ignore all CFG
-*.cfg
+
 
 .flake8
 #Ignore all yaml
