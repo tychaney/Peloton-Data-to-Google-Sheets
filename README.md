@@ -7,7 +7,7 @@ Version 2.1.2 includes the initial commit of the sheet_builder.py file. This fil
 
 Also included is the addition of the 'pause' arg which defaults to false. This is to combat the "Quota Exceeded" Error which occurs to service accounts which exceed their allotted edits per period (occurs with multiple users)
 
-Version 2.1.1 also includes the blank JSON which is not intended for use. This is merely an example of what is produced when the service account is created.
+Version 2.1.2 also includes the blank JSON which is not intended for use. This is merely an example of what is produced when the service account is created.
 
 As of Version 2.1.0, the script has been split into multiple files. All functions are on their own and are imported into the peloton_to_sheets.py script. Functionality remains the same, especially if being run passively via a raspberry pi or similar device.
 
