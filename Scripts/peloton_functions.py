@@ -304,7 +304,7 @@ def describe_by_year(moaDF_all_time, year):
     return description_df
 
 
-def make_sns_plots(username, moaDF_all_time):
+def make_sns_plots(username, moaDF_all_time, current_year_df):
     moaDF_all_time.index = pd.to_datetime(moaDF_all_time.index)
     avg_hr_all_time = moaDF_all_time["Avg. Heartrate"]
     avg_hr_all_time = [i for i in avg_hr_all_time if i != 0]
@@ -319,7 +319,7 @@ def make_sns_plots(username, moaDF_all_time):
 
     # plt.legend()
     plt.title(f"{username} Average HR per Ride KDE All Time")
-    plt.savefig(f"{graph_path}{username}/{username}_Average_HR_KDE.jpg")
+    plt.savefig(f"{graph_path}{username}/{username}_Average_HR_KDE.png")
     plt.clf()
     # Remove all 0s
     moaDF_all_time[moaDF_all_time <= 0] = np.nan
@@ -331,7 +331,7 @@ def make_sns_plots(username, moaDF_all_time):
     )
     plt.title(f"{username} Average Heartrate per Ride (by Year)")
     ax.set_xticklabels(ax.get_xticklabels(), rotation=30)
-    plt.savefig(f"{graph_path}{username}/{username}_Average_HR_by_year.jpg")
+    plt.savefig(f"{graph_path}{username}/{username}_Average_HR_by_year.png")
     plt.clf()
 
     # Make a boxplot by month
@@ -343,7 +343,7 @@ def make_sns_plots(username, moaDF_all_time):
     )
     plt.title(f"{username} Average Heartrate per Ride (by Year)")
     ax.set_xticklabels(ax.get_xticklabels(), rotation=30)
-    plt.savefig(f"{graph_path}{username}/{username}_Average_HR_by_month.jpg")
+    plt.savefig(f"{graph_path}{username}/{username}_Average_HR_by_month.png")
     plt.clf()
 
     # Make a Violin Chart off of HR
@@ -354,7 +354,7 @@ def make_sns_plots(username, moaDF_all_time):
     )
     ax.set_xticklabels(ax.get_xticklabels(), rotation=30)
     plt.title(f"{username} Average Heartrate per Ride (by Month)")
-    plt.savefig(f"{graph_path}{username}/{username}_Violin_Average_HR_by_month.jpg")
+    plt.savefig(f"{graph_path}{username}/{username}_Violin_Average_HR_by_month.png")
     plt.clf()
 
     # Output
@@ -366,7 +366,7 @@ def make_sns_plots(username, moaDF_all_time):
     )
     plt.title(f"{username} Total Output per Ride (by Year)")
     ax.set_xticklabels(ax.get_xticklabels(), rotation=30)
-    plt.savefig(f"{graph_path}{username}/{username}_Total_Output_by_year.jpg")
+    plt.savefig(f"{graph_path}{username}/{username}_Total_Output_by_year.png")
     plt.clf()
 
     # Violin By Month
@@ -377,7 +377,7 @@ def make_sns_plots(username, moaDF_all_time):
     )
     plt.title(f"{username} Total Output per Ride (by Month)")
     ax.set_xticklabels(ax.get_xticklabels(), rotation=30)
-    plt.savefig(f"{graph_path}{username}/{username}_Violin_Total Output_by_month.jpg")
+    plt.savefig(f"{graph_path}{username}/{username}_Violin_Total Output_by_month.png")
     plt.clf()
 
     # Boxplot per Month
@@ -388,7 +388,29 @@ def make_sns_plots(username, moaDF_all_time):
     )
     plt.title(f"{username} Total Output per Ride (by Month)")
     ax.set_xticklabels(ax.get_xticklabels(), rotation=30)
-    plt.savefig(f"{graph_path}{username}/{username}_Boxplot_Total Output_by_month.jpg")
+    plt.savefig(f"{graph_path}{username}/{username}_Boxplot_Total Output_by_month.png")
+    plt.clf()
+    
+    # Correlation Heat Map (MoaDF)
+    plt.figure(figsize=(16, 16))
+    ax = sns.heatmap(
+        data=moaDF_all_time.corr(),
+        annot=True)
+    plt.title(f'{username} Correlation Heatmap [Cycling Metrics]')
+    plt.savefig(
+        f'{graph_path}{username}/{username}_Correlation_Chart.png')
+    plt.clf()
+
+    # Cumulative Line Plot
+    plt.figure(figsize=(15, 8))
+    sns.set_style('darkgrid')
+    ax = sns.lineplot(
+        data=current_year_df,
+        x=current_year_df.index,
+        y='Cumulative Distance (mi)')
+    plt.title(f'{username} Cumulative Distance (Current Year)')
+    plt.savefig(
+        f'{graph_path}{username}/{username}_Cumulative_Distance.png')
     plt.clf()
 
 
@@ -407,7 +429,7 @@ def make_charts(requested_workout_data, username):
         selector=dict(mode="markers"),
     )
     figOutput_Distance.write_image(
-        graph_path + username + "/" + username + "_Output_to_Distance2D.jpg"
+        graph_path + username + "/" + username + "_Output_to_Distance2D.png"
     )
 
 
@@ -472,7 +494,7 @@ def find_by_postfix(postfix, graph_path):
 def send_text_update(phone_number, summary_df, sheets_link, username):
     time_now = datetime.now()
 
-    user_graphs = find_by_postfix(".jpg", graph_path + username + "/")
+    user_graphs = find_by_postfix(".png", graph_path + username + "/")
 
     if time_now.hour < 16:
         pass
@@ -526,7 +548,7 @@ def send_text_update(phone_number, summary_df, sheets_link, username):
 
         for image in user_graphs:
             with open(image, "rb") as fp:
-                img = MIMEImage(fp.read(), _subtype="jpg")
+                img = MIMEImage(fp.read(), _subtype="png")
                 img.add_header(
                     "Content-Disposition", "attachment", filename=image.split("/")[-1]
                 )
@@ -544,7 +566,7 @@ def send_email_update(email, username, summary_df, sheets_link):
     time_now = datetime.now()
     time_now = datetime.now()
 
-    user_graphs = find_by_postfix(".jpg", graph_path + username + "/")
+    user_graphs = find_by_postfix(".png", graph_path + username + "/")
 
     if time_now.hour < 16:
         pass
@@ -585,7 +607,7 @@ def send_email_update(email, username, summary_df, sheets_link):
 
         for image in user_graphs:
             with open(image, "rb") as fp:
-                img = MIMEImage(fp.read(), _subtype="jpg")
+                img = MIMEImage(fp.read(), _subtype="png")
                 img.add_header(
                     "Content-Disposition", "attachment", filename=image.split("/")[-1]
                 )

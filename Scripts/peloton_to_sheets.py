@@ -135,7 +135,7 @@ for row in login_df.iterrows():
     # Seaborn First
     # Make KDE Plot
     gc.open_by_url(google_sheets_link).get_worksheet(0).update("H2", "Preparing Graphs")
-    make_sns_plots(username_user, moaDF_user)
+    make_sns_plots(username_user, moaDF_user, current_year_df_user)
 
     # Chart with Plotly
     make_charts(current_year_requested_user, username_user)
