@@ -1,19 +1,40 @@
 # Peloton Stats to Google Sheets with Data Visualization through Seaborn and Plotly
 
 
-## Current Version 2.1.1 (as of January 31, 2022)
+## Current Version 2.1.2 (as of February 1, 2022)
+
+Version 2.1.2 includes the initial commit of the sheet_builder.py file. This file can be used to generate your spreadsheet. It will not, however (as of initial release), include the charts or conditional formatting present in the example file below, but it will assist in expediting any copy and pasting you choose to do for formatting purposes. As such, recommend running this file first to create your sheet. You can add the sheet to your Google Drive after it has been shared with you. NOTE: The script assumes all files are co-located in the same directory.
+
+Also included is the addition of the 'pause' arg which defaults to false. This is to combat the "Quota Exceeded" Error which occurs to service accounts which exceed their allotted edits per period (occurs with multiple users)
+
+Version 2.1.2 also includes the blank JSON which is not intended for use. This is merely an example of what is produced when the service account is created.
 
 As of Version 2.1.0, the script has been split into multiple files. All functions are on their own and are imported into the peloton_to_sheets.py script. Functionality remains the same, especially if being run passively via a raspberry pi or similar device.
 
-### Background
+## Example Google Sheet (use this for formatting) with Selected Example Data Displays
+The sheet itself can be found at the following link:
+https://docs.google.com/spreadsheets/d/1ZfYI-NGeTK08VAQsnpXk_e_z_mnyT_7vX98O82nLxPY/edit?usp=sharing
+
+
+### Aggregate Data Display
+<img width="1315" alt="Screen Shot 2022-01-31 at 1 01 00 PM" src="https://user-images.githubusercontent.com/94143619/151872445-db4a6f74-e3a7-4897-aa81-88652ed41fb4.png">
+
+### Requested Data Display (Highly Correlated Numerical Data)[Current Year]
+<img width="747" alt="Screen Shot 2022-01-31 at 12 53 55 PM" src="https://user-images.githubusercontent.com/94143619/151871524-772aaeb9-66d8-4c99-909c-aa289338e9f3.png">
+
+### All Numerical Data Current Year
+<img width="1197" alt="Screen Shot 2022-01-31 at 12 57 48 PM" src="https://user-images.githubusercontent.com/94143619/151872083-aaf54272-9f00-4fd5-9687-39d678818d3f.png">
+
+### Description of Data (Descriptive Stats) by Year
+<img width="1049" alt="Screen Shot 2022-01-31 at 12 55 45 PM" src="https://user-images.githubusercontent.com/94143619/151871694-0bcc47b4-bc8a-49c3-8326-18cbbc9a3b56.png">
+
+
+## Background
 
 Initial Problem: 2 peloton users were looking for a way to track their metrics in a way that was readable and available
 
 Solution: this script. I personally run this at set intervals on a raspberry pi, so access to their data
 is usable at virtually all hours.
-
-Example Google Sheet (use this for formatting)
-https://docs.google.com/spreadsheets/d/1ZfYI-NGeTK08VAQsnpXk_e_z_mnyT_7vX98O82nLxPY/edit?usp=sharing
 
 Here's how it works. The code relies on first having built a csv file which contains the headings of 'name',
 'username', 'email', and 'password' (for Peloton). It also includes other unique path and link variables to
@@ -21,8 +42,7 @@ simplify execution for inexperienced users. The script pulls data from this file
 peloton. From there, it downloads the users CSV data with all of their workout data. For my specific needs,
 we only cared about cycling data (which you will notice in the code). Several calculations are performed and
 some clean up is completed on the dataframes. That data is then passed into the user's assigned Google Sheet
-(which also includes their interactive 'goal' cell used for pace calculations [this resets on the first of each
-year]. Since I am running on a raspberry pi, I use SMTP to send an email or text to each user at the end of the day with
+(which also includes their interactive 'goal' cell used for pace calculations [this resets on the first of each year]. Since I am running on a raspberry pi, I use SMTP to send an email or text to each user at the end of the day with
 a daily wrap email.
 
 The script utilizes several dependencies (noted in the code itself). One of the dependencies is based on the
@@ -34,9 +54,8 @@ Feel free to reach out with any questions you have or buy me a coffee :) Venmo: 
 
 Future releases include the following:
 
-1. A script to automatically produce the Google Sheet (rather than utilizing the copying and pasting of the example found below)
-2. PR calculation functionality
-3. Setup files to automatically set up user machine
+1. PR calculation functionality
+2. Setup files to automatically set up user machine (Releases aid in this process)
 
 ## General Setup
 
