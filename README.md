@@ -54,8 +54,7 @@ Feel free to reach out with any questions you have or buy me a coffee :) Venmo: 
 
 Future releases include the following:
 
-1. PR calculation functionality
-2. Setup files to automatically set up user machine (Releases aid in this process)
+1. Utilization of the GMAIL API for email functionality (based on Google's usage of new security measures set to take effect in May)
 
 ## General Setup
 
