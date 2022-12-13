@@ -21,7 +21,7 @@ plt.rcParams.update({"figure.max_open_warning": 0})  # Ignores the output
 # for having too many figures in use (May apply depending on Machine
 # capabilities and number of users)
 
-version = "2.1.1" # Current as of 31JAN22
+version = "2.1.3" # Current as of 31JAN22
 git = "https://github.com/tychaney/Peloton-Data-to-Google-Sheets"
 
 
@@ -32,7 +32,7 @@ last_day_of_year = date(today.year, 12, 31)
 days_left_in_year = last_day_of_year - today
 days_left_in_year_float = float(days_left_in_year.days)
 total_days_in_year = last_day_of_year - first_day_of_year
-total_days_in_year_float = float(total_days_in_year.days)
+total_days_in_year_float = float(total_days_in_year.days + 1)
 days_so_far = today - first_day_of_year
 days_so_far_float = float(days_so_far.days + 1)
 

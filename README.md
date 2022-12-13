@@ -1,7 +1,7 @@
 # Peloton Stats to Google Sheets with Data Visualization through Seaborn and Plotly
 
 
-## Current Version 2.1.2 (as of February 1, 2022)
+## Current Version 2.1.3 (as of December 12, 2022)
 
 Version 2.1.2 includes the initial commit of the sheet_builder.py file. This file can be used to generate your spreadsheet. It will not, however (as of initial release), include the charts or conditional formatting present in the example file below, but it will assist in expediting any copy and pasting you choose to do for formatting purposes. As such, recommend running this file first to create your sheet. You can add the sheet to your Google Drive after it has been shared with you. NOTE: The script assumes all files are co-located in the same directory.
 
