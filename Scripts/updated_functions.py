@@ -63,6 +63,10 @@ login_df = pd.DataFrame(login_data)
 service_account_path = login_df.iloc[0]["Path for Service Account JSON"]
 graph_path = login_df.iloc[0]["Path to Save Graphs"]
 
+
+
+
+
 # Below is all the internal functions. Moved to new script for clarity
 gc = gspread.service_account(service_account_path + "PelotonToGoogle.json")
 
