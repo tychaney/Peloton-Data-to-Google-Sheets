@@ -7,3 +7,5 @@
 
 # Ignore all Log
 *.log
+peloton_creds.json
+peloton.py
