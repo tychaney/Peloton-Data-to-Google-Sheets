@@ -1,0 +1,2 @@
+﻿name,email,password,username,Peloton CSV Link,Google Sheets Link,Path for Service Account JSON,Path to Save Graphs,phone
+John,johndoe@example.com,password123,johndoepeloton123,https://api.onepeloton.com/api/user/...,https://docs.google.com/spreadsheets/….,/user/name/…./,/user/name/…/graphs/,55586753409
